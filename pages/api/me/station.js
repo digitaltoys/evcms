@@ -2,6 +2,15 @@
 import sqlite3 from 'sqlite3'
 import { open } from 'sqlite'
 
+/**
+ * @swagger
+ * /api/me/station:
+ *   get:
+ *     description: 환경부의 충전기 정보를 가져와 db에 업데이트한다
+ *     responses:
+ *       200:
+ *         description: 성공
+ */
 export default async function handler(req, res) {
   const { id } = req.query
   const db = await  open({
