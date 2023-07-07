@@ -15,9 +15,7 @@ export default function Home() {
         } h-full bg-red-400 transition-all`}
       >
         <div>
-          <button onClick={() => setIsSidebarOpen(false)} s>
-            사이드바 닫기
-          </button>
+          <button onClick={() => setIsSidebarOpen(false)}>사이드바 닫기</button>
         </div>
       </div>
       <div
@@ -31,6 +29,13 @@ export default function Home() {
           setIsSidebarOpen={setIsSidebarOpen}
         />
       </div>
+      <button
+        onClick={() => {
+          setIsSidebarOpen(true);
+        }}
+      >
+        사이드바 열기
+      </button>
     </main>
   );
 }

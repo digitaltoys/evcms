@@ -4,7 +4,7 @@ import { open } from "sqlite";
 
 /**
  * @swagger
- * /api/station/{statid}/cherger/{chargerid}:
+ * /api/station/{statid}/charger/{chargerid}:
  *   get:
  *     description: 충전소의 chargerid 충전기 정보
  *     responses:
