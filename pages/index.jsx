@@ -1,20 +1,17 @@
-import Image from 'next/image'
-import Layout from '../components/layout'
+import Layout from "../components/layout";
+import Map from "../components/map";
 
 export default function Home() {
+  // SK 에너지 본사 위도경도
+  const LATITUDE = 37.569;
+  const LONGITUDE = 126.98;
   return (
-    // <RootLayout>
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>Home contents</div>
+    <main className="w-full h-full">
+      <Map latitude={LATITUDE} longitude={LONGITUDE} />
     </main>
-    // </RootLayout>
-  )
+  );
 }
 
-Home.getLayout = function getLayout(page) {
-  return (
-    <Layout>
-      {page}
-    </Layout>
-  )
-}
+// Home.getLayout = function getLayout(page) {
+//   return <Layout>{page}</Layout>;
+// };
