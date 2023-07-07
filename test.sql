@@ -1,9 +1,16 @@
 -- SQLite
-SELECT id, name
+SELECT *
 FROM Station;
 
--- UPDATE Station SET id = '10000'  WHERE id = '10001'
-UPDATE Charger SET stationid = '10000'  WHERE stationid = '10001'
-UPDATE Charger SET stationid = '20000'  WHERE id = '00004'
+select * 
+from Charger 
+where statId = "ME174040";
 
-select * from Charger where stationid = "10000"
+-- UPDATE Station SET id = '10000'  WHERE id = '10001'
+
+-- 충전기에서 충전소 정보만 빼서 충전소 테이블에 넣기
+INSERT OR REPLACE INTO Station(statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat)
+    select statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat
+    from Charger
+    where statNm not null
+    group by statId;
