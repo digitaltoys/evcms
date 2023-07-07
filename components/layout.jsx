@@ -5,9 +5,11 @@ export default function Layout({ children }) {
   return (
     <>
       {/* <Navbar /> */}
-      <div>Navbar</div>
-      <main>{children}</main>
+      <div className="w-screen h-screen">
+        <div>Navbar</div>
+        <main>{children}</main>
+      </div>
       {/* <Footer /> */}
     </>
-  )
+  );
 }
