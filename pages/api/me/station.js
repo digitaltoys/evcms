@@ -14,12 +14,12 @@ export default async function handler(req, res) {
     redirect: 'follow'
   };
 
-  const res2 = await fetch("https://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON", requestOptions)
-  const data = await res2.json();
-  if (res2.ok) {
-    // console.log(data);
-    if (data?.resultCode == "00" && data?.items?.item != undefined) {
-      let arr = data?.items?.item;
+  fetch("https://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON", requestOptions)
+  .then(response => response.json())
+  .then(result => {
+      // console.log(result);
+    if (result?.resultCode == "00" && result?.items?.item != undefined) {
+      let arr = result?.items?.item;
       arr.forEach(el => {
         let keys = Object.keys(el).map(e=>(e=="null")?e:"'"+e+"'").join(",");
         let values = Object.values(el).map(e=>(e=="null")?e:"'"+e+"'").join(",");
@@ -35,9 +35,8 @@ export default async function handler(req, res) {
           console.log(`A row has been inserted with rowid ${this.lastID}`);
         })
       });
+      res.status(200).json(result);
     }
-    res.status(200).json(data);
-  } else {
-    throw Error(data);
-  }
+  })
+  .catch(error => console.log('error', error));
 }

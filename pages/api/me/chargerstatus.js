@@ -14,12 +14,12 @@ export default async function handler(req, res) {
     redirect: 'follow'
   };
 
-  const res2 = await fetch("https://apis.data.go.kr/B552584/EvCharger/getChargerStatus?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&dataType=JSON", requestOptions)
-  const data = await res2.json();
-  if (res2.ok) {
+  fetch("https://apis.data.go.kr/B552584/EvCharger/getChargerStatus?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&dataType=JSON", requestOptions)
+  .then(response => response.json())
+  .then(result => {
     // console.log(data);
-    if (data?.resultCode == "00" && data?.items?.item != undefined) {
-      let arr = data?.items?.item;
+    if (result?.resultCode == "00" && result?.items?.item != undefined) {
+      let arr = result?.items?.item;
       arr.forEach(el => {
         let keys = Object.keys(el).map(e=>(e=="null")?e:"'"+e+"'").join(",");
         let values = Object.values(el).map(e=>(e=="null")?e:"'"+e+"'").join(",");
@@ -36,8 +36,7 @@ export default async function handler(req, res) {
         })
       });
     }
-    res.status(200).json(data);
-  } else {
-    throw Error(data);
-  }
+    res.status(200).json(result);
+  })
+  .catch(error => console.log('error', error));
 }
