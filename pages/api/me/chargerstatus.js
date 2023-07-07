@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     redirect: 'follow'
   };
 
-  const res2 = await fetch("https://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON", requestOptions)
+  const res2 = await fetch("https://apis.data.go.kr/B552584/EvCharger/getChargerStatus?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&dataType=JSON", requestOptions)
   const data = await res2.json();
   if (res2.ok) {
     // console.log(data);

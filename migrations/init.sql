@@ -1,6 +1,6 @@
 -- Up
 CREATE TABLE Charger (
-    chgerId TEXT PRIMARY KEY,
+    chgerId TEXT,
     chgerType TEXT,
     statNm TEXT,
     statId TEXT,
@@ -31,7 +31,15 @@ CREATE TABLE Charger (
     limitDetail TEXT,
     delYn TEXT,
     delDetail TEXT,
-    trafficYn TEXT
+    trafficYn TEXT,
+
+    stat TEXT,
+    statUpdDt TEXT,
+    lastTsdt TEXT,
+    lastTedt TEXT,
+    nowTsdt TEXT,
+
+    PRIMARY KEY(chgerId, statId)
 );
 
 -- INSERT INTO Charger (chargerid,stationid,name) values('00001', '10000', 'C1');
