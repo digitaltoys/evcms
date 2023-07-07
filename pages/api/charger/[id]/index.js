@@ -9,6 +9,6 @@ export default async function handler(req, res) {
     driver: sqlite3.Database
   })
 
-  const Chargers = await db.all(`select * from Charger where id = "${id}"`)
+  const Chargers = await db.all(`select * from Charger where chgerId = "${id}"`)
   res.status(200).json(Chargers?.[0]);
 }
