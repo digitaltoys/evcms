@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Map = ({ latitude, longitude }) => {
+const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
   const [map, setMap] = useState(null);
 
   const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
@@ -30,6 +30,9 @@ const Map = ({ latitude, longitude }) => {
         });
 
         marker.setMap(newMap);
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          setIsSidebarOpen(true);
+        });
       });
     };
 
@@ -38,7 +41,7 @@ const Map = ({ latitude, longitude }) => {
     return () => script.removeEventListener("load", onLoadKakaoMap);
   }, []);
 
-  return <div id="map" className="w-screen h-screen rounded-lg"></div>;
+  return <div id="map" className="w-full h-full"></div>;
 };
 
 export default Map;

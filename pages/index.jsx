@@ -1,13 +1,36 @@
+import { useState } from "react";
 import Layout from "../components/layout";
 import Map from "../components/map";
 
 export default function Home() {
-  // SK 에너지 본사 위도경도
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const LATITUDE = 37.569;
   const LONGITUDE = 126.98;
   return (
-    <main className="w-full h-full">
-      <Map latitude={LATITUDE} longitude={LONGITUDE} />
+    <main className="w-full h-full flex">
+      <div
+        className={`inline-block ${
+          isSidebarOpen ? "w-[390px]" : "w-0"
+        } h-full bg-red-400 transition-all`}
+      >
+        <div>
+          <button onClick={() => setIsSidebarOpen(false)} s>
+            사이드바 닫기
+          </button>
+        </div>
+      </div>
+      <div
+        className={` ${
+          isSidebarOpen ? "w-[calc(100%-390px)]" : "w-full"
+        } h-full transition-all`}
+      >
+        <Map
+          latitude={LATITUDE}
+          longitude={LONGITUDE}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
+      </div>
     </main>
   );
 }
