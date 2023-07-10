@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
-import { getStationList } from "../apis/evApi";
+import { useAtom, useSetAtom } from "jotai";
 
-const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
-  const [map, setMap] = useState(null);
+import { getStationDetail, getStationList } from "../apis/evApi";
+import {
+  mapAtom,
+  selectedMarkerAtom,
+  selectedMarkerDetailAtom,
+} from "../atoms/atom";
+
+const Map = ({ latitude, longitude }) => {
   const [stationList, setStationList] = useState(null);
   const [markerList, setMarkerList] = useState(null);
-  const [selectedMarker, setSelectedMarker] = useState(null);
+
+  const [map, setMap] = useAtom(mapAtom);
+  const [selectedMarker, setSelectedMarker] = useAtom(selectedMarkerAtom);
+  const setSelectedMarkerDetail = useSetAtom(selectedMarkerDetailAtom);
 
   const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
 
@@ -60,21 +69,21 @@ const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
         setMarkerList(null);
       }
 
+      // 마커 생성 및 추가, 이벤트 바인딩
       for (let mk of stationList) {
-        const { lat, lng, statNm } = mk;
+        const { lat, lng, statId, statNm } = mk;
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
         const marker = new window.kakao.maps.Marker({
           position: markerPosition,
           map,
           title: statNm,
         });
-        1;
+        marker.id = statId;
         window.kakao.maps.event.addListener(marker, "click", function () {
-          markerList.forEach((item) => {
-            if (item.statNm === this.getTitle()) {
-            }
-          });
-          setIsSidebarOpen(true);
+          const { Ma: lat, La: lng } = this.getPosition();
+          const moveLocation = new window.kakao.maps.LatLng(lat, lng);
+          map.panTo(moveLocation);
+          setSelectedMarker(marker);
         });
 
         if (markerList) {
@@ -86,7 +95,25 @@ const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
     }
   }, [stationList]);
 
-  return <div id="map" className="w-full h-full"></div>;
+  // selectedMarker 변경시 충전소 세부 내용 data 요청
+  useEffect(() => {
+    if (selectedMarker) {
+      const statId = selectedMarker.id;
+
+      const fetchStationDetail = async (id) => {
+        try {
+          const data = await getStationDetail(id);
+          setSelectedMarkerDetail(data);
+        } catch (err) {
+          throw err;
+        }
+      };
+
+      fetchStationDetail(statId);
+    }
+  }, [selectedMarker]);
+
+  return <div id="map" className="w-[calc(100%-390px)]"></div>;
 };
 
 export default Map;

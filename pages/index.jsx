@@ -1,38 +1,21 @@
-import { useState } from "react";
-import Layout from "../components/layout";
+import { useEffect } from "react";
+import { useAtom, useAtomValue } from "jotai";
+
 import Map from "../components/map";
+import Sidebar from "../components/sidebar";
+import { mapAtom, selectedMarkerAtom } from "../atoms/atom";
 
 export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const selectedMarker = useAtomValue(selectedMarkerAtom);
+  const map = useAtomValue(mapAtom);
 
   const LATITUDE = 37.569;
   const LONGITUDE = 126.98;
+
   return (
-    <main className="w-full h-full flex">
-      <div
-        className={`inline-block ${
-          isSidebarOpen ? "w-[390px]" : "w-0"
-        } h-full bg-red-400 transition-all ease-linear duration-100`}
-      >
-        <div>
-          <button onClick={() => setIsSidebarOpen(false)}>사이드바 닫기</button>
-        </div>
-      </div>
-      <div
-        className={` ${
-          isSidebarOpen ? "w-[calc(100%-390px)]" : "w-full"
-        } h-full transition-all`}
-      >
-        <Map
-          latitude={LATITUDE}
-          longitude={LONGITUDE}
-          setIsSidebarOpen={setIsSidebarOpen}
-        />
-      </div>
-    </main>
+    <div className="relative inline-flex w-full h-full">
+      <Sidebar />
+      <Map latitude={LATITUDE} longitude={LONGITUDE} />
+    </div>
   );
 }
-
-// Home.getLayout = function getLayout(page) {
-//   return <Layout>{page}</Layout>;
-// };

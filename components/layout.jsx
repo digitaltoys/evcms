@@ -1,15 +1,12 @@
-// import Navbar from './navbar'
-// import Footer from './footer'
+import Navbar from "./common/navbar";
 
 export default function Layout({ children }) {
   return (
     <>
-      {/* <Navbar /> */}
-      <div className="w-screen h-screen">
-        <div>Navbar</div>
-        <main>{children}</main>
+      <div className="relative w-full h-full">
+        <Navbar />
+        <main className="w-full h-[calc(100%-4rem)]">{children}</main>
       </div>
-      {/* <Footer /> */}
     </>
   );
 }

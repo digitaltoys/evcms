@@ -15,12 +15,12 @@ export const getStationList = async () => {
 
 /**
  * 단일 전기차 충전소 정보를 가져옵니다.
- * @param {number} statid - 충전소의 ID
+ * @param {number} statId - 충전소의 ID
  * @returns {Promise<Object>} 전기차 충전소의 정보
  */
-export const getStationInfo = async (statid) => {
+export const getStationDetail = async (statId) => {
   try {
-    const response = await axiosInstance(`/station/${statid}`);
+    const response = await axiosInstance(`/station/${statId}`);
     return response.data;
   } catch (err) {
     throw err;
