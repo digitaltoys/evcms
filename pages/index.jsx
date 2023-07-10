@@ -12,7 +12,7 @@ export default function Home() {
       <div
         className={`inline-block ${
           isSidebarOpen ? "w-[390px]" : "w-0"
-        } h-full bg-red-400 transition-all`}
+        } h-full bg-red-400 transition-all ease-linear duration-100`}
       >
         <div>
           <button onClick={() => setIsSidebarOpen(false)}>사이드바 닫기</button>
@@ -29,13 +29,6 @@ export default function Home() {
           setIsSidebarOpen={setIsSidebarOpen}
         />
       </div>
-      <button
-        onClick={() => {
-          setIsSidebarOpen(true);
-        }}
-      >
-        사이드바 열기
-      </button>
     </main>
   );
 }

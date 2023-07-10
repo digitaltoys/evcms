@@ -5,6 +5,7 @@ const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
   const [map, setMap] = useState(null);
   const [stationList, setStationList] = useState(null);
   const [markerList, setMarkerList] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
 
@@ -34,6 +35,7 @@ const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
     return () => script.removeEventListener("load", onLoadKakaoMap);
   }, []);
 
+  // 충전소 data fetching
   useEffect(() => {
     if (map) {
       const fetchEvStationList = async () => {
@@ -48,6 +50,7 @@ const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
     }
   }, [map]);
 
+  // 충전소 data에 따라 마커 생성
   useEffect(() => {
     if (stationList) {
       if (markerList) {
@@ -58,7 +61,27 @@ const Map = ({ latitude, longitude, setIsSidebarOpen }) => {
       }
 
       for (let mk of stationList) {
-        const markerPosition = new window.kakao.maps.LatLng();
+        const { lat, lng, statNm } = mk;
+        const markerPosition = new window.kakao.maps.LatLng(lat, lng);
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition,
+          map,
+          title: statNm,
+        });
+        1;
+        window.kakao.maps.event.addListener(marker, "click", function () {
+          markerList.forEach((item) => {
+            if (item.statNm === this.getTitle()) {
+            }
+          });
+          setIsSidebarOpen(true);
+        });
+
+        if (markerList) {
+          setMarkerList((prev) => [...prev, marker]);
+        } else {
+          setMarkerList([marker]);
+        }
       }
     }
   }, [stationList]);
