@@ -4,7 +4,7 @@ import { open } from 'sqlite'
 
 /**
  * @swagger
- * /api/commoncode/{category}/{code}:
+ * /api/commoncode/{category}:
  *   get:
  *     description: 해당 카테고리의 코드들을 리턴
  *     responses:
