@@ -1,4 +1,7 @@
 import axiosInstance from "./instance";
+import axios from "axios";
+import { useAtom, useSetAtom, useAtomValue } from "jotai";
+import { commonCodeAtom } from "../atoms/atom";
 
 /**
  * 전기차 충전소 목록을 가져옵니다.
@@ -25,4 +28,26 @@ export const getStationDetail = async (statId) => {
   } catch (err) {
     throw err;
   }
+};
+
+export const getCommonCode = async (category) => {
+  // const [commonCode, setCommonCode] = useAtom(commonCodeAtom);
+  const setCommonCode = useSetAtom(commonCodeAtom);
+
+  return new Promise((res, rej) => {
+    axios.request({
+      method: "GET",
+      url: `api/commoncode/${category}`,
+      headers:{
+        // "Content-Type": "application/json",
+      },
+      params: {},
+      data: {},
+    }).then(response => {
+      console.log("commonCode:", response.data);
+      // setCommonCode(response.data);
+    }).catch(err => {
+      console.log("commonCode error:", err.message);
+    })
+  })
 };

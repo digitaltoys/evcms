@@ -2,13 +2,22 @@
   display: inline-block;
   width: 24rem;
   background-color: white;
+  border-radius: 1rem;
+  /* overflow: hidden; */
 }
 
-.overlay__container::before {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-color: green;
+.overlay__container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border: 18px solid transparent;
+  border-top-color: white;
+  border-bottom: 0;
+  margin-left: -18px;
+  margin-bottom: -18px;
 }
 
 .title__wrapper {
@@ -19,6 +28,7 @@
   height: 3rem;
   padding: 1rem;
   background-color: tomato;
+  border-radius: 1rem 1rem 0 0;
 }
 
 .content__wrapper {

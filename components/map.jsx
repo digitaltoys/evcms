@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import "../styles/components/map.css";
 
 import { getStationDetail, getStationList } from "../apis/evApi";
@@ -8,7 +8,6 @@ import {
   selectedMarkerAtom,
   selectedMarkerDetailAtom,
 } from "../atoms/atom";
-import makeStationOverlay from "../utils/makeCustomOverlay";
 
 const Map = ({ latitude, longitude }) => {
   const [stationList, setStationList] = useState(null);
@@ -94,12 +93,6 @@ const Map = ({ latitude, longitude }) => {
   // 충전소 data에 따라 마커 생성
   useEffect(() => {
     if (stationList) {
-      if (markerList) {
-        for (let mk of markerList) {
-          mk.setMap(null);
-        }
-      }
-
       // 마커 생성 및 추가, 이벤트 바인딩
       for (let mk of stationList) {
         const { lat, lng, statId, statNm } = mk;
@@ -113,9 +106,17 @@ const Map = ({ latitude, longitude }) => {
 
         // 마커 클릭 이벤트 추가
         window.kakao.maps.event.addListener(marker, "click", () => {
-          console.log("selectedMarker 확인", selectedMarker);
+          console.log("click");
+          console.log(stationOverlayRef.current);
+          if (
+            stationOverlayRef.current &&
+            stationOverlayRef.current.id === marker.id
+          ) {
+            console.log("early return");
+            return;
+          }
           if (stationOverlayRef.current) stationOverlayRef.current.setMap(null);
-
+          console.log("if 통과");
           const { Ma: lat, La: lng } = marker.getPosition();
           const moveLocation = new window.kakao.maps.LatLng(lat, lng);
           map.panTo(moveLocation);
@@ -153,12 +154,10 @@ const Map = ({ latitude, longitude }) => {
 
   // 선택된 마커 상태 변경 시 데이터 렌더링
   useEffect(() => {
-    console.log("selectedMarkerDetail", selectedMarkerDetail);
-
     // 오버레이 생성
     if (selectedMarker && selectedMarkerDetail) {
       const { Ma: lat, La: lng } = selectedMarker.getPosition();
-      const { addr, busiCall, useTime, busiNm } = selectedMarkerDetail;
+      const { addr, busiCall, useTime, busiNm, statId } = selectedMarkerDetail;
 
       const overlayContainer = document.createElement("div");
       overlayContainer.className = "overlay__container";
@@ -209,12 +208,17 @@ const Map = ({ latitude, longitude }) => {
         yAnchor: 1.2,
       });
 
+      newStationOverlay.id = statId;
+
       newStationOverlay.setMap(map);
       stationOverlayRef.current = newStationOverlay;
 
       closeButton.addEventListener("click", () => {
-        newStationOverlay.setMap(null);
+        // newStationOverlay.setMap(null);
         stationOverlayRef.current.setMap(null);
+        stationOverlayRef.current = null;
+        setSelectedMarker(null);
+        setSelectedMarkerDetail(null);
       });
     }
   }, [selectedMarkerDetail]);
