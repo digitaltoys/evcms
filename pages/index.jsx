@@ -12,6 +12,8 @@ export default function Home() {
   const LATITUDE = 37.569;
   const LONGITUDE = 126.98;
 
+  console.log("index------------------------");
+
   return (
     <div className="relative inline-flex w-full h-full">
       <Sidebar />

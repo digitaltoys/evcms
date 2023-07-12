@@ -94,6 +94,14 @@ INSERT INTO commonCode (category, code, name) VALUES("zcode", "31", "울산광�
 INSERT INTO commonCode (category, code, name) VALUES("zcode", "36", "세종특별자치시");
 INSERT INTO commonCode (category, code, name) VALUES("zcode", "41", "경기도");
 INSERT INTO commonCode (category, code, name) VALUES("zcode", "42", "강원도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "43", "충청북도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "44", "충청남도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "45", "전라북도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "46", "전라남도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "47", "경상북도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "48", "경상남도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "50", "제주특별자치도");
+INSERT INTO commonCode (category, code, name) VALUES("zcode", "51", "강원특별자치도");
 
 SELECT * FROM commonCode;
 
