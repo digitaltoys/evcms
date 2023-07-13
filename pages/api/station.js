@@ -12,8 +12,7 @@ import { open } from 'sqlite'
  *         description: 충전소 정보의 배열
  */
 export default async function handler(req, res) {
-  const { id } = req.query
-  const { zcode, zscode, kind, kindDetail, dataType } = req.query;
+  const { zcode, zscode, kind, kindDetail, dataType, s, w, n, e } = req.query;
   console.log("req:",req.query);
 
   const db = await  open({
@@ -26,6 +25,10 @@ export default async function handler(req, res) {
   condition += kind?` and kind="${kind}"`:"";
   condition += kindDetail?` and kindDetail="${kindDetail}"`:"";
   condition += dataType?` and dataType="${dataType}"`:"";
+  condition += s?` and lat>"${s}"`:"";
+  condition += w?` and lng>"${w}"`:"";
+  condition += n?` and lat<"${n}"`:"";
+  condition += e?` and lng<"${e}"`:"";
   console.log(`select * from Station where ""="" ${condition}`);
 
   const Chargers = await db.all(`select * from Station where 1=1 ${condition}`);

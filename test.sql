@@ -15,4 +15,5 @@ INSERT OR REPLACE INTO Station(statNm, statId, addr, location, useTime, lat, lng
     where statNm not null
     group by statId;
 
-select * from Station ;
+select * from Station 
+where "37.55" < lat and lat < "37.60";
