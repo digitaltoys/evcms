@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAtom } from "jotai";
-import "../styles/components/map.css";
 
+import "../styles/components/map.css";
 import { getStationDetail, getStationList } from "../apis/evApi";
 import {
   mapAtom,
@@ -9,7 +9,8 @@ import {
   selectedMarkerDetailAtom,
 } from "../atoms/atom";
 
-const Map = ({ latitude, longitude }) => {
+const Map = () => {
+  const [gps, setGps] = useState({ lat: null, lng: null });
   const [stationList, setStationList] = useState(null);
   const [markerList, setMarkerList] = useState(null);
   const stationOverlayRef = useRef(null);
@@ -22,8 +23,26 @@ const Map = ({ latitude, longitude }) => {
 
   const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
 
+  // 현재 위치 받아오기
+  useEffect(() => {
+    if (navigator.geolocation) {
+      console.log(navigator.geolocation);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setGps({ lat: latitude, lng: longitude });
+        },
+        () => {},
+        { enableHighAccuracy: true }
+      );
+    } else {
+      setGps({ lat: 37.5696304, lng: 126.9821706 });
+    }
+  }, []);
+
   // 카카오맵 Load
   useEffect(() => {
+    console.log(gps);
     const script = document.createElement("script");
 
     script.async = true;
@@ -35,7 +54,8 @@ const Map = ({ latitude, longitude }) => {
       window.kakao.maps.load(() => {
         const container = document.querySelector("#map");
         const options = {
-          center: new window.kakao.maps.LatLng(latitude, longitude),
+          // center: new window.kakao.maps.LatLng(latitude, longitude),
+          center: new window.kakao.maps.LatLng(gps.lat, gps.lng),
           level: 2,
         };
         const newMap = new window.kakao.maps.Map(container, options);
@@ -45,54 +65,25 @@ const Map = ({ latitude, longitude }) => {
 
     script.addEventListener("load", onLoadKakaoMap);
 
+    // 충전소 data fetching
+    const fetchEvStationList = async () => {
+      try {
+        const data = await getStationList();
+        setStationList(data);
+      } catch (err) {
+        throw err;
+      }
+    };
+    fetchEvStationList();
+
+    // 현재 위치 받아오기
+
     return () => script.removeEventListener("load", onLoadKakaoMap);
-  }, []);
-
-  // 충전소 data fetching
-  useEffect(() => {
-    if (map) {
-      const fetchEvStationList = async () => {
-        try {
-          const data = await getStationList();
-          setStationList(data);
-        } catch (err) {
-          throw err;
-        }
-      };
-      fetchEvStationList();
-
-      // test: 커스텀 오버레이
-      // const content = `
-      // <div class="overlay__container">
-      //   <div class="title__wrapper">
-      //     <h1>충전소 이름</h1>
-      //     <button>닫기</button>
-      //   </div>
-      //   <div class="content__wrapper">
-      //     <ul class="content-list__wrapper">
-      //       <li>주소</li>
-      //       <li>상세 주소</li>
-      //       <li>전화번호</li>
-      //       <li>운영 시간</li>
-      //       <li>운영사</li>
-      //       <li>충전 가능 갯수</li>
-      //    </ul>
-      //   </div>
-      // </div>
-      // `;
-      // const position = new window.kakao.maps.LatLng(37.569, 126.98);
-      // const customOverlay = new kakao.maps.CustomOverlay({
-      //   position,
-      //   content,
-      // });
-
-      // customOverlay.setMap(map);
-    }
-  }, [map]);
+  }, [gps]);
 
   // 충전소 data에 따라 마커 생성
   useEffect(() => {
-    if (stationList) {
+    if (stationList && map) {
       // 마커 생성 및 추가, 이벤트 바인딩
       for (let mk of stationList) {
         const { lat, lng, statId, statNm } = mk;
@@ -132,7 +123,7 @@ const Map = ({ latitude, longitude }) => {
         }
       }
     }
-  }, [stationList]);
+  }, [stationList, map]);
 
   // selectedMarker 변경시 충전소 세부 내용 data 요청
   useEffect(() => {
@@ -156,8 +147,8 @@ const Map = ({ latitude, longitude }) => {
   useEffect(() => {
     // 오버레이 생성
     if (selectedMarker && selectedMarkerDetail) {
-      const { Ma: lat, La: lng } = selectedMarker.getPosition();
-      const { addr, busiCall, useTime, busiNm, statId } = selectedMarkerDetail;
+      const { addr, busiCall, useTime, busiNm, statId, lat, lng } =
+        selectedMarkerDetail;
 
       const overlayContainer = document.createElement("div");
       overlayContainer.className = "overlay__container";
