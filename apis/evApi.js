@@ -10,6 +10,7 @@ import { commonCodeAtom } from "../atoms/atom";
 export const getStationList = async () => {
   try {
     const response = await axiosInstance("/station");
+    // const response = await axiosInstance("/station?zscode=11110");
     return response.data;
   } catch (err) {
     throw err;
@@ -48,6 +49,28 @@ export const getCommonCode = async (category) => {
       // setCommonCode(response.data);
     }).catch(err => {
       console.log("commonCode error:", err.message);
+    })
+  })
+};
+
+export const getGeo2Addr = async (x, y) => {
+
+  return new Promise((res, rej) => {
+    axios.request({
+      method: "GET",
+      url: `/api/kakao/address?x=${x}&y=${y}`,
+      headers:{
+        // "Content-Type": "application/json",
+      },
+      params: {},
+      data: {},
+    }).then(response => {
+      // console.log("address:", response.data);
+      // setCommonCode(response.data);
+      res(response.data);
+    }).catch(err => {
+      console.log("commonCode error:", err.message);
+      rej(err);
     })
   })
 };
