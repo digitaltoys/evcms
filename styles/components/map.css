@@ -3,7 +3,6 @@
   width: 24rem;
   background-color: white;
   border-radius: 1rem;
-  /* overflow: hidden; */
 }
 
 .overlay__container::after {

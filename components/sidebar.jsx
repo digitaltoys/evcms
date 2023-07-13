@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAtomValue } from "jotai";
-import { selectedMarkerAtom, selectedMarkerDetailAtom } from "../atoms/atom";
+import { selectedMarkerDetailAtom } from "../atoms/atom";
 
 const Sidebar = () => {
   const selectedMarkerDetail = useAtomValue(selectedMarkerDetailAtom);
