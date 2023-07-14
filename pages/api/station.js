@@ -7,6 +7,63 @@ import { open } from "sqlite";
  * /api/station:
  *   get:
  *     description: 충전소 목록
+ *     parameters:
+ *       - name: zcode
+ *         in: query
+ *         description: 행정구역
+ *         example: 11
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *       - name: zscode
+ *         in: query
+ *         description: 행정구역
+ *         example: 11110
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *       - name: kind
+ *         in: query
+ *         description: 충전소 구분코드
+ *         example: F0
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *       - name: kindDetail
+ *         in: query
+ *         description: 충전소 구분 상세코드
+ *         example: F002
+ *         schema:
+ *           type: integer
+ *           format: int64
+ *       - name: s
+ *         in: query
+ *         description: 지도영역 GPS좌표 (남쪽)
+ *         example: 37.55
+ *         schema:
+ *           type: string
+ *           format: int64
+ *       - name: w
+ *         in: query
+ *         description: 지도영역 GPS좌표 (서쪽)
+ *         example: 126.00
+ *         schema:
+ *           type: string
+ *           format: int64
+ *       - name: n
+ *         in: query
+ *         description: 지도영역 GPS좌표 (북쪽)
+ *         example: 37.57
+ *         schema:
+ *           type: string
+ *           format: int64
+ *       - name: e
+ *         in: query
+ *         description: 지도영역 GPS좌표 (동쪽)
+ *         example: 127.1
+ *         schema:
+ *           type: string
+ *           format: int64
  *     responses:
  *       200:
  *         description: 충전소 정보의 배열
