@@ -4,7 +4,7 @@ import { open } from "sqlite";
 
 /**
  * @swagger
- * /api/me/station:
+ * /api/me/charger:
  *   get:
  *     description: 환경부의 충전기 정보를 가져와 db에 업데이트한다
  *     responses:
@@ -12,7 +12,7 @@ import { open } from "sqlite";
  *         description: 성공
  */
 export default async function handler(req, res) {
-  const { id } = req.query;
+  const query = req.query;
   const db = await open({
     filename: "./db.sqlite",
     driver: sqlite3.Database,
@@ -22,10 +22,12 @@ export default async function handler(req, res) {
     method: "GET",
     redirect: "follow",
   };
-
+  let qs = Object.keys(req.query).map(key => key + '=' + req.query[key]).join('&');
+  qs = qs?"&"+qs:"";
+  console.log("query string:", qs);
   fetch(
-    // `https://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&dataType=JSON&pageNo=1&numOfRows=10`,
-    `/api/me/station/11`,
+    `https://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey=ePl3xmtBQOwludl%2F1SJOyCoLr5qw7CK1283BV36XPMTxXYhleaSB5g%2BWEzmFW%2F4fVkWpQ52UuA6iY0hgcgh4wA%3D%3D&dataType=JSON${qs}`,
+    // `/api/me/charger/11`,
     requestOptions
   )
     .then((response) => response.json())
@@ -59,7 +61,7 @@ export default async function handler(req, res) {
           from Charger
           where statNm not null
           group by statId;`
-        db.run(sql, function (err) {
+        db.run(sql2, function (err) {
           if (err) {
             return console.log(err.message);
           }

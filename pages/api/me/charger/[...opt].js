@@ -7,7 +7,7 @@ import { open } from "sqlite";
 
 /**
  * @swagger
- * /api/me/station/{zcode}/{pageNo}/{numOfRows}:
+ * /api/me/charger/{zcode}/{pageNo}/{numOfRows}:
  *   get:
  *     description: 환경부의 충전기 정보를 가져와 db에 업데이트한다
  *     parameters:
