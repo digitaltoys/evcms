@@ -101,6 +101,11 @@ const Map = () => {
         marker.id = statId;
 
         window.kakao.maps.event.addListener(marker, "click", () => {
+          if (
+            stationOverlayRef.current &&
+            marker.id === stationOverlayRef.current.id
+          )
+            return;
           if (stationOverlayRef.current) stationOverlayRef.current.setMap(null);
           const { Ma: lat, La: lng } = marker.getPosition();
           const moveLocation = new window.kakao.maps.LatLng(lat, lng);
@@ -180,8 +185,18 @@ const Map = () => {
   );
 
   const makeOverlay = (detail) => {
-    const { addr, busiCall, useTime, busiNm, statId, statNm, lat, lng } =
-      detail;
+    console.log(detail);
+    const {
+      addr,
+      busiCall,
+      useTime,
+      busiNm,
+      statId,
+      statNm,
+      lat,
+      lng,
+      chgerCnt,
+    } = detail;
 
     const overlayContainer = document.createElement("div");
     overlayContainer.className = "overlay__container";
@@ -208,7 +223,7 @@ const Map = () => {
     const liCompany = document.createElement("li");
     liCompany.innerText = `운영기관 : ${busiNm}`;
     const liCharger = document.createElement("li");
-    liCharger.innerText = `충전가능갯수 : `;
+    liCharger.innerText = `충전기 수 : ${chgerCnt}`;
 
     contentListWrapper.appendChild(liAddress);
     contentListWrapper.appendChild(liAddressDetail);
