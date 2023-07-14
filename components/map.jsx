@@ -1,29 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import { useAtom } from "jotai";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSetAtom } from "jotai";
 
 import "../styles/components/map.css";
-import {
-  getBoundStationList,
-  getStationDetail,
-  getStationList,
-} from "../apis/evApi";
-import {
-  mapAtom,
-  selectedMarkerAtom,
-  selectedMarkerDetailAtom,
-} from "../atoms/atom";
+import { getBoundStationList, getStationDetail } from "../apis/evApi";
+import { selectedMarkerAtom, selectedMarkerDetailAtom } from "../atoms/atom";
 
 const Map = () => {
   const [gps, setGps] = useState({ lat: null, lng: null });
   const [stationList, setStationList] = useState(null);
-  const [markerList, setMarkerList] = useState(null);
+  const [markerList, setMarkerList] = useState([]);
+  const [selectedMarker, setSelectedMarker] = useState(selectedMarkerAtom);
   const stationOverlayRef = useRef(null);
   const mapRef = useRef(null);
 
-  const [selectedMarker, setSelectedMarker] = useAtom(selectedMarkerAtom);
-  const [selectedMarkerDetail, setSelectedMarkerDetail] = useAtom(
-    selectedMarkerDetailAtom
-  );
+  const setSelectedMarkerDetail = useSetAtom(selectedMarkerDetailAtom);
 
   const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
 
@@ -41,22 +31,6 @@ const Map = () => {
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(async () => {
         // 현재 위치 받아오기
-        const getGps = () => {
-          return new Promise((res, rej) => {
-            navigator.geolocation.getCurrentPosition(
-              (pos) => {
-                const { latitude, longitude } = pos.coords;
-                res({ lat: latitude, lng: longitude });
-              },
-              () => {
-                console.log("failed to get GPS");
-                res({ lat: 37.5696304, lng: 126.9821706 });
-              },
-              { enableHighAccuracy: true }
-            );
-          });
-        };
-
         const { lat, lng } = await getGps();
         setGps({ lat, lng });
 
@@ -70,31 +44,20 @@ const Map = () => {
         mapRef.current = newMap;
 
         // 충전소 data fetching
-        const fetchEvStationList = async () => {
-          try {
-            const {
-              ha: lngSW,
-              qa: latSW,
-              oa: lngNE,
-              pa: latNE,
-            } = mapRef.current.getBounds();
-            console.log("ha", lngSW, "qa", latSW, "oa", lngNE, "pa", latNE);
-            console.log(mapRef.current.getBounds());
-            const params = {
-              s: latSW,
-              w: lngSW,
-              n: latNE,
-              e: lngNE,
-            };
+        fetchStationList(mapRef.current);
 
-            const data = await getBoundStationList(params);
-            console.log(data);
-            setStationList(data);
-          } catch (err) {
-            throw err;
+        // 카카오지도 이벤트 등록
+        window.kakao.maps.event.addListener(
+          newMap,
+          "zoom_changed",
+          function () {
+            reFetchStationList(mapRef.current);
           }
-        };
-        fetchEvStationList();
+        );
+
+        window.kakao.maps.event.addListener(newMap, "dragend", function () {
+          reFetchStationList(mapRef.current);
+        });
       });
     };
 
@@ -107,9 +70,28 @@ const Map = () => {
   useEffect(() => {
     console.log("%c stationList useEffect", "color: blue");
     if (stationList) {
-      // 마커 생성 및 추가, 이벤트 바인딩
-      for (let mk of stationList) {
-        const { lat, lng, statId, statNm } = mk;
+      let existMarkers = markerList.filter((mk) => {
+        const pos = mk.getPosition();
+        const bounds = mapRef.current.getBounds();
+
+        if (!bounds.contain(pos)) {
+          mk.setMap(null);
+          return false;
+        }
+
+        return true;
+      });
+
+      let additionalStations = stationList.filter((st) => {
+        if (existMarkers.find((mk) => mk.id === st.statId)) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+
+      for (let station of additionalStations) {
+        const { lat, lng, statId, statNm } = station;
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
         const marker = new window.kakao.maps.Marker({
           position: markerPosition,
@@ -118,15 +100,12 @@ const Map = () => {
         });
         marker.id = statId;
 
-        // 마커 클릭 이벤트 추가
         window.kakao.maps.event.addListener(marker, "click", () => {
           if (
             stationOverlayRef.current &&
-            stationOverlayRef.current.id === marker.id
-          ) {
-            console.log("early return");
+            marker.id === stationOverlayRef.current.id
+          )
             return;
-          }
           if (stationOverlayRef.current) stationOverlayRef.current.setMap(null);
           const { Ma: lat, La: lng } = marker.getPosition();
           const moveLocation = new window.kakao.maps.LatLng(lat, lng);
@@ -134,14 +113,10 @@ const Map = () => {
           setSelectedMarker(marker);
         });
 
-        if (markerList) {
-          setMarkerList((prev) => {
-            return [...prev, marker];
-          });
-        } else {
-          setMarkerList([marker]);
-        }
+        existMarkers.push(marker);
       }
+
+      setMarkerList(existMarkers);
     }
   }, [stationList]);
 
@@ -165,9 +140,63 @@ const Map = () => {
     }
   }, [selectedMarker]);
 
-  function makeOverlay(detail) {
-    const { addr, busiCall, useTime, busiNm, statId, statNm, lat, lng } =
-      detail;
+  // Functions
+  const getGps = () => {
+    return new Promise((res, rej) => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          res({ lat: latitude, lng: longitude });
+        },
+        () => {
+          console.log("failed to get GPS");
+          res({ lat: 37.5696304, lng: 126.9821706 });
+        },
+        { enableHighAccuracy: true }
+      );
+    });
+  };
+
+  const fetchStationList = async (map) => {
+    try {
+      const { ha: lngSW, qa: latSW, oa: lngNE, pa: latNE } = map.getBounds();
+      const params = {
+        s: latSW,
+        w: lngSW,
+        n: latNE,
+        e: lngNE,
+      };
+
+      const data = await getBoundStationList(params);
+      setStationList(data);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const reFetchStationList = useCallback(
+    async (map) => {
+      if (stationList !== null) {
+        stationList.forEach((item) => item.setMap(null));
+      }
+      fetchStationList(map);
+    },
+    [stationList]
+  );
+
+  const makeOverlay = (detail) => {
+    console.log(detail);
+    const {
+      addr,
+      busiCall,
+      useTime,
+      busiNm,
+      statId,
+      statNm,
+      lat,
+      lng,
+      chgerCnt,
+    } = detail;
 
     const overlayContainer = document.createElement("div");
     overlayContainer.className = "overlay__container";
@@ -194,7 +223,7 @@ const Map = () => {
     const liCompany = document.createElement("li");
     liCompany.innerText = `운영기관 : ${busiNm}`;
     const liCharger = document.createElement("li");
-    liCharger.innerText = `충전가능갯수 : `;
+    liCharger.innerText = `충전기 수 : ${chgerCnt}`;
 
     contentListWrapper.appendChild(liAddress);
     contentListWrapper.appendChild(liAddressDetail);
@@ -216,6 +245,7 @@ const Map = () => {
       position,
       content: overlayContainer,
       yAnchor: 1.2,
+      zIndex: 100,
     });
 
     newStationOverlay.id = statId;
@@ -230,7 +260,7 @@ const Map = () => {
       setSelectedMarker(null);
       setSelectedMarkerDetail(null);
     });
-  }
+  };
 
   return <div id="map" className="w-[calc(100%-390px)]"></div>;
 };

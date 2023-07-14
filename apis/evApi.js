@@ -17,6 +17,21 @@ export const getStationList = async () => {
   }
 };
 
+/**
+ * 지도 화면 내 충전소 목록을 가져옵니다.
+ * @param {Object} params - Query parameters.
+ * @param {string} [params.zcode] - Zcode parameter.
+ * @param {string} [params.zscode] - Zscode parameter.
+ * @param {string} [params.kind] - Kind parameter.
+ * @param {string} [params.kindDetail] - KindDetail parameter.
+ * @param {string} [params.dataType] - DataType parameter.
+ * @param {string} [params.s] - S parameter.
+ * @param {string} [params.w] - W parameter.
+ * @param {string} [params.n] - N parameter.
+ * @param {string} [params.e] - E parameter.
+ * @returns {Promise<Object>} - Response data.
+ * @throws {Error} - If an error occurs during the API call.
+ */
 export const getBoundStationList = async (params) => {
   try {
     const response = await axiosInstance("/station", { params });
