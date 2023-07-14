@@ -230,6 +230,7 @@ const Map = () => {
       position,
       content: overlayContainer,
       yAnchor: 1.2,
+      zIndex: 100,
     });
 
     newStationOverlay.id = statId;
