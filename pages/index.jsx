@@ -10,12 +10,10 @@ export default function Home() {
   useEffect(() => {
     console.log("mount------------------------");
     let fetchAddr = async () => {
-      let addr = await getGeo2Addr(126.98, 37.569)
-      console.log("addr", addr);
-      let zcode = addr.code.substr(0,2)
-      let zscode = addr.code.substr(0,5)
-      console.log("zscode", zscode);
-    }
+      let addr = await getGeo2Addr(126.98, 37.569);
+      let zcode = addr.code.substr(0, 2);
+      let zscode = addr.code.substr(0, 5);
+    };
     fetchAddr();
   }, []);
 
