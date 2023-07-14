@@ -447,6 +447,7 @@ INSERT INTO commonCode (category, code, name) VALUES("chgerStat", "2", "사용�
 INSERT INTO commonCode (category, code, name) VALUES("chgerStat", "3", "충전중");
 INSERT INTO commonCode (category, code, name) VALUES("chgerStat", "4", "운영중지");
 INSERT INTO commonCode (category, code, name) VALUES("chgerStat", "5", "점검중");
+INSERT INTO commonCode (category, code, name) VALUES("chgerStat", "9", "알수없음");
 
 SELECT * FROM commonCode where category = "chgerStat";
 
