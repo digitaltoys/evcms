@@ -54,8 +54,8 @@ export default async function handler(req, res) {
         });
 
         // 충전소 정보 생성
-        let sql2 = `INSERT OR REPLACE INTO Station(statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode)
-          select statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode
+        let sql2 = `INSERT OR REPLACE INTO Station(chgerCnt, statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode)
+          select count(chgerId), statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode
           from Charger
           where statNm not null
           group by statId;`

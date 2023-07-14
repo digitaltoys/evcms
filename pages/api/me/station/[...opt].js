@@ -82,6 +82,21 @@ export default async function handler(req, res) {
             console.log(`A row has been inserted with rowid ${this.lastID}`);
           });
         });
+
+        // 충전소 정보 생성
+        let sql2 = `INSERT OR REPLACE INTO Station(chgerCnt, statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode)
+          select count(chgerId), statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode
+          from Charger
+          where statNm not null
+          group by statId;`
+        db.run(sql, function (err) {
+          if (err) {
+            return console.log(err.message);
+          }
+          // get the last insert id
+          console.log(`A row has been inserted with rowid ${this.lastID}`);
+        });
+
         res.status(200).json(result);
       }
     })
