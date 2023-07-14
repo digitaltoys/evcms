@@ -17,6 +17,15 @@ export const getStationList = async () => {
   }
 };
 
+export const getBoundStationList = async (params) => {
+  try {
+    const response = await axiosInstance("/station", { params });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
 /**
  * 단일 전기차 충전소 정보를 가져옵니다.
  * @param {number} statId - 충전소의 ID
@@ -36,41 +45,46 @@ export const getCommonCode = async (category) => {
   const setCommonCode = useSetAtom(commonCodeAtom);
 
   return new Promise((res, rej) => {
-    axios.request({
-      method: "GET",
-      url: `api/commoncode/${category}`,
-      headers:{
-        // "Content-Type": "application/json",
-      },
-      params: {},
-      data: {},
-    }).then(response => {
-      console.log("commonCode:", response.data);
-      // setCommonCode(response.data);
-    }).catch(err => {
-      console.log("commonCode error:", err.message);
-    })
-  })
+    axios
+      .request({
+        method: "GET",
+        url: `api/commoncode/${category}`,
+        headers: {
+          // "Content-Type": "application/json",
+        },
+        params: {},
+        data: {},
+      })
+      .then((response) => {
+        console.log("commonCode:", response.data);
+        // setCommonCode(response.data);
+      })
+      .catch((err) => {
+        console.log("commonCode error:", err.message);
+      });
+  });
 };
 
 export const getGeo2Addr = async (x, y) => {
-
   return new Promise((res, rej) => {
-    axios.request({
-      method: "GET",
-      url: `/api/kakao/address?x=${x}&y=${y}`,
-      headers:{
-        // "Content-Type": "application/json",
-      },
-      params: {},
-      data: {},
-    }).then(response => {
-      // console.log("address:", response.data);
-      // setCommonCode(response.data);
-      res(response.data);
-    }).catch(err => {
-      console.log("commonCode error:", err.message);
-      rej(err);
-    })
-  })
+    axios
+      .request({
+        method: "GET",
+        url: `/api/kakao/address?x=${x}&y=${y}`,
+        headers: {
+          // "Content-Type": "application/json",
+        },
+        params: {},
+        data: {},
+      })
+      .then((response) => {
+        // console.log("address:", response.data);
+        // setCommonCode(response.data);
+        res(response.data);
+      })
+      .catch((err) => {
+        console.log("commonCode error:", err.message);
+        rej(err);
+      });
+  });
 };
