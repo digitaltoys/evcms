@@ -12,14 +12,15 @@ import { open } from "sqlite";
  *         description: 충전기 정보의 배열
  */
 export default async function handler(req, res) {
-  const { stationid } = req.query;
+  const { statid } = req.query;
   const db = await open({
     filename: "./db.sqlite",
     driver: sqlite3.Database,
   });
 
   const Chargers = await db.all(
-    `select * from Charger where statid = "${stationid}"`
+    `select * from Charger where statid = "${statid}"`
   );
+  console.log(Chargers);
   res.status(200).json(Chargers);
 }

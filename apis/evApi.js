@@ -55,6 +55,15 @@ export const getStationDetail = async (statId) => {
   }
 };
 
+export const getChargerList = async (statId) => {
+  try {
+    const response = await axiosInstance(`/station/${statId}/charger`);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const getCommonCode = async (category) => {
   // const [commonCode, setCommonCode] = useAtom(commonCodeAtom);
   const setCommonCode = useSetAtom(commonCodeAtom);

@@ -254,7 +254,6 @@ const Map = () => {
     stationOverlayRef.current = newStationOverlay;
 
     closeButton.addEventListener("click", () => {
-      // newStationOverlay.setMap(null);
       stationOverlayRef.current.setMap(null);
       stationOverlayRef.current = null;
       setSelectedMarker(null);
