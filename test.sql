@@ -18,5 +18,14 @@ INSERT OR REPLACE INTO Station(chgerCnt, statNm, statId, addr, location, useTime
     where statNm not null
     group by statId;
 
+-- 충전소의 충전기 상태
+    select count(case when stat="2" then 1 end),count(chgerId), statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode
+    from Charger
+    where statId="CGA00001";
+
+    select stat, statNm, statId, addr, location, useTime, lat, lng, busiId, bnm, busiNm, busiCall, stat, zcode, zscode
+    from Charger
+    where statId="CGA00001";
+
 select * from Station 
 where "37.55" < lat and lat < "37.60";

@@ -12,7 +12,7 @@ import { open } from 'sqlite'
  *         description: 충전소 정보
  */
 export default async function handler(req, res) {
-  const { stationid, zcode, zscode, kind, kindDetail, dataType } = req.query;
+  const { statid, zcode, zscode, kind, kindDetail, dataType } = req.query;
   console.log("req:",req);
 
   const db = await  open({
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     driver: sqlite3.Database
   });
 
-  let condition = stationid?` and statid = "${stationid}"`:"";
+  let condition = statid?` and statid = "${statid}"`:"";
   condition += zcode?` and zcode=${zcode}`:"";
   condition += zscode?` and zscode=${zscode}`:"";
   condition += kind?` and kind=${kind}`:"";
