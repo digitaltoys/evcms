@@ -19,13 +19,13 @@ const STAT_COLOR = {
 const ChargerListItem = ({ charger }) => {
   const { stat, chgerType } = charger;
   return (
-    <li className="flex w-full h-20 mb-3  rounded-xl bg-white">
+    <li className="flex w-full h-20 mb-3 rounded-xl bg-white select-none">
       <div
         className={`flex grow justify-center items-center font-bold ${STAT_COLOR[stat]}`}
       >
         <span>{CHARGER_STAT[stat]}</span>
       </div>
-      <div className="flex flex-col max-w-[64px] grow justify-center items-center">
+      <div className="flex flex-col basis-16 max-w-[64px] grow justify-center items-center">
         <AC3
           fill={
             CHARGER_TYPE[chgerType].includes("AC3상") ? "black" : "gainsboro"
@@ -43,7 +43,7 @@ const ChargerListItem = ({ charger }) => {
           AC3상
         </span>
       </div>
-      <div className="flex flex-col max-w-[64px] grow justify-center items-center">
+      <div className="flex flex-col basis-16 max-w-[64px] grow justify-center items-center">
         <ACFullCharge
           fill={
             CHARGER_TYPE[chgerType].includes("AC완속") ? "black" : "gainsboro"
@@ -61,7 +61,7 @@ const ChargerListItem = ({ charger }) => {
           AC완속
         </span>
       </div>
-      <div className="flex flex-col max-w-[64px] grow justify-center items-center">
+      <div className="flex flex-col basis-16 max-w-[64px] grow justify-center items-center">
         <DCChademo
           fill={
             CHARGER_TYPE[chgerType].includes("DC차데모") ? "black" : "gainsboro"
@@ -79,7 +79,7 @@ const ChargerListItem = ({ charger }) => {
           DC차데모
         </span>
       </div>
-      <div className="flex flex-col max-w-[64px] grow justify-center items-center">
+      <div className="flex flex-col basis-16 max-w-[64px] grow justify-center items-center">
         <DCCombo
           fill={
             CHARGER_TYPE[chgerType].includes("DC콤보") ? "black" : "gainsboro"

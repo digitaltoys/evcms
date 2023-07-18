@@ -103,7 +103,7 @@ export const BUS_ID = {
 };
 
 export const CHARGER_STAT = {
-  0: "알수없음",
+  0: "상태미확인",
   1: "통신이상",
   2: "사용가능",
   3: "충전중",

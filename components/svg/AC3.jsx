@@ -9,11 +9,11 @@ const AC3 = ({ fill, width, height }) => {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       ></g>
       <g id="SVGRepo_iconCarrier">
         {" "}
@@ -25,8 +25,8 @@ const AC3 = ({ fill, width, height }) => {
         <path d="M9.5 17.5C10.3284 17.5 11 16.8284 11 16C11 15.1716 10.3284 14.5 9.5 14.5C8.67157 14.5 8 15.1716 8 16C8 16.8284 8.67157 17.5 9.5 17.5Z"></path>{" "}
         <path d="M16 16C16 16.8284 15.3284 17.5 14.5 17.5C13.6716 17.5 13 16.8284 13 16C13 15.1716 13.6716 14.5 14.5 14.5C15.3284 14.5 16 15.1716 16 16Z"></path>{" "}
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M18.1866 2.5H5.81343C5.03921 3.14952 4.35739 3.91818 3.79241 4.78C2.66259 6.50343 2 8.59938 2 10.86C2 16.7363 6.47715 21.5 12 21.5C17.5228 21.5 22 16.7363 22 10.86C22 8.59938 21.3374 6.50343 20.2076 4.78C19.6426 3.91818 18.9608 3.14952 18.1866 2.5ZM20 10.86C20 15.7504 16.3032 19.5 12 19.5C7.69679 19.5 4 15.7504 4 10.86C4 8.99332 4.54641 7.27778 5.46503 5.87651C5.79426 5.37431 6.1709 4.91309 6.58675 4.5H17.4132C17.8291 4.91309 18.2057 5.37431 18.535 5.87651C19.4536 7.27778 20 8.99332 20 10.86Z"
         ></path>{" "}
       </g>
