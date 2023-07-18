@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 import { selectedMarkerDetailAtom } from "../atoms/atom";
 import { getChargerList } from "../apis/evApi";
 import ChargerListItem from "./chargerListItem";
+import SearchBar from "./searchBar";
 
 const Sidebar = () => {
   const [chargerList, setChargerList] = useState(null);
@@ -35,26 +36,34 @@ const Sidebar = () => {
 
   return (
     <>
-      <section
-        className={`inline-block w-[390px] relative h-full p-4 bg-gray-200 overflow-hidden`}
-      >
-        {selectedMarkerDetail ? (
-          <>
-            <div className="w-full h-60 mb-3 bg-white rounded-xl"></div>
-            <div className="h-[calc(100%-240px)] overflow-y-scroll no-scrollbar">
-              <ul>
-                {chargerList &&
-                  chargerList.map((charger) => (
-                    <ChargerListItem key={charger.chgerId} charger={charger} />
-                  ))}
-              </ul>
+      <section className="flex flex-col">
+        <div className="h-12">
+          <SearchBar />
+        </div>
+        <div
+          className={`inline-block w-[390px] relative h-full p-4 bg-gray-200 overflow-hidden`}
+        >
+          {selectedMarkerDetail ? (
+            <>
+              <div className="w-full h-60 mb-3 bg-white rounded-xl"></div>
+              <div className="h-[calc(100%-240px)] overflow-y-scroll no-scrollbar">
+                <ul>
+                  {chargerList &&
+                    chargerList.map((charger) => (
+                      <ChargerListItem
+                        key={charger.chgerId}
+                        charger={charger}
+                      />
+                    ))}
+                </ul>
+              </div>
+            </>
+          ) : (
+            <div className="w-full h-full flex justify-center items-center">
+              <span>충전소를 선택해주세요!</span>
             </div>
-          </>
-        ) : (
-          <div className="w-full h-full flex justify-center items-center">
-            <span>충전소를 선택해주세요!</span>
-          </div>
-        )}
+          )}
+        </div>
       </section>
     </>
   );
