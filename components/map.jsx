@@ -216,7 +216,9 @@ const Map = () => {
     const liAddress = document.createElement("li");
     liAddress.innerText = `주소 : ${addr}`;
     const liAddressDetail = document.createElement("li");
-    liAddressDetail.innerText = `상세주소 : ${location}`;
+    liAddressDetail.innerText = `상세주소 : ${
+      location ? location : "정보가 없습니다."
+    }`;
     const liTel = document.createElement("li");
     liTel.innerText = `전화번호 : ${busiCall}`;
     const liTime = document.createElement("li");
