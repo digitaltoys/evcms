@@ -13,7 +13,7 @@ import { open } from 'sqlite'
  */
 export default async function handler(req, res) {
   const { statid, zcode, zscode, kind, kindDetail, dataType } = req.query;
-  console.log("req:",req);
+  // console.log("req:",req);
 
   const db = await  open({
     filename:  './db.sqlite' ,
@@ -27,6 +27,13 @@ export default async function handler(req, res) {
   condition += kindDetail?` and kindDetail=${kindDetail}`:"";
   condition += dataType?` and dataType=${dataType}`:"";
   console.log("condition:", condition);
-  const Chargers = await db.all(`select * from Station where 1=1 ${condition}`);
-  res.status(200).json(Chargers?.[0]);
+  const Chargers = await db.all(`select * from Charger where 1=1 ${condition}`);
+  let Station = {};
+  if (Chargers?.[0]) {
+    Station = {...Chargers?.[0], Chargers};
+    Station.chgerId = undefined;
+    Station.shgerType = undefined;
+  }
+
+  res.status(200).json(Station);
 }
