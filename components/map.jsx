@@ -3,13 +3,13 @@ import { useSetAtom } from "jotai";
 
 import "../styles/components/map.css";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
-import { selectedMarkerAtom, selectedMarkerDetailAtom } from "../atoms/atom";
+import { selectedMarkerDetailAtom } from "../atoms/atom";
 
 const Map = () => {
   const [gps, setGps] = useState({ lat: null, lng: null });
   const [stationList, setStationList] = useState(null);
   const [markerList, setMarkerList] = useState([]);
-  const [selectedMarker, setSelectedMarker] = useState(selectedMarkerAtom);
+  const [selectedMarker, setSelectedMarker] = useState(null);
   const stationOverlayRef = useRef(null);
   const mapRef = useRef(null);
 
@@ -188,6 +188,7 @@ const Map = () => {
     console.log(detail);
     const {
       addr,
+      location,
       busiCall,
       useTime,
       busiNm,
@@ -215,7 +216,7 @@ const Map = () => {
     const liAddress = document.createElement("li");
     liAddress.innerText = `주소 : ${addr}`;
     const liAddressDetail = document.createElement("li");
-    liAddressDetail.innerText = `상세주소 : ${addr}`;
+    liAddressDetail.innerText = `상세주소 : ${location}`;
     const liTel = document.createElement("li");
     liTel.innerText = `전화번호 : ${busiCall}`;
     const liTime = document.createElement("li");
