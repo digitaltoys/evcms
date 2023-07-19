@@ -3,11 +3,12 @@ import Image from "next/image";
 
 import { CHARGER_STAT, CHARGER_TYPE } from "../constants";
 import AC3 from "./svg/ac3";
-import ACFullCharge from "./svg/acFullCharge";
+import ACStandardCharge from "./svg/ACStandardCharge";
 import DCChademo from "./svg/dcChademo";
 import DCCombo from "./svg/dcCombo";
 
 const STAT_COLOR = {
+  0: "text-gray-500", // 상태미확인
   1: "text-red-500", // 통신이상
   2: "text-green-500", // 충전대기
   3: "text-yellow-500", // 충전중
@@ -19,7 +20,7 @@ const STAT_COLOR = {
 const ChargerListItem = ({ charger }) => {
   const { stat, chgerType } = charger;
   return (
-    <li className="flex w-full h-20 mb-3 rounded-xl bg-white select-none">
+    <li className="flex w-full h-20 mb-3 rounded-2xl bg-white select-none">
       <div
         className={`flex grow justify-center items-center font-bold ${STAT_COLOR[stat]}`}
       >
@@ -44,7 +45,7 @@ const ChargerListItem = ({ charger }) => {
         </span>
       </div>
       <div className="flex flex-col basis-16 max-w-[64px] grow justify-center items-center">
-        <ACFullCharge
+        <ACStandardCharge
           fill={
             CHARGER_TYPE[chgerType].includes("AC완속") ? "black" : "gainsboro"
           }

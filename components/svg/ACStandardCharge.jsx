@@ -1,6 +1,6 @@
 import React from "react";
 
-const ACFullCharge = ({ fill, width, height }) => {
+const ACStandardCharge = ({ fill, width, height }) => {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -23,4 +23,4 @@ const ACFullCharge = ({ fill, width, height }) => {
   );
 };
 
-export default ACFullCharge;
+export default ACStandardCharge;

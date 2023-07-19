@@ -4,6 +4,8 @@ import { useSetAtom } from "jotai";
 import "../styles/components/map.css";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import { selectedMarkerDetailAtom } from "../atoms/atom";
+import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";
+import Filter from "./filter";
 
 const Map = () => {
   const [gps, setGps] = useState({ lat: null, lng: null });
@@ -196,7 +198,7 @@ const Map = () => {
       statNm,
       lat,
       lng,
-      chgerCnt,
+      Chargers,
     } = detail;
 
     const overlayContainer = document.createElement("div");
@@ -226,7 +228,9 @@ const Map = () => {
     const liCompany = document.createElement("li");
     liCompany.innerText = `운영기관 : ${busiNm}`;
     const liCharger = document.createElement("li");
-    liCharger.innerText = `충전기 수 : ${chgerCnt}`;
+    liCharger.innerText = `충전현황 : ${
+      Chargers.filter((item) => item.stat === "2").length
+    } / ${Chargers.length}`;
 
     contentListWrapper.appendChild(liAddress);
     contentListWrapper.appendChild(liAddressDetail);
@@ -264,7 +268,12 @@ const Map = () => {
     });
   };
 
-  return <div id="map" className="w-[calc(100%-390px)]"></div>;
+  return (
+    <section className="w-[calc(100%-390px)] h-full">
+      <div id="map" className="w-full h-full"></div>
+      <Filter />
+    </section>
+  );
 };
 
 export default Map;
