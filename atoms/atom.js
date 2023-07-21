@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 
 const selectedMarkerDetailAtom = atom(null);
+const currentGpsAtom = atom({ lat: null, lng: null });
 const commonCodeAtom = atom(null);
 
-export { selectedMarkerDetailAtom, commonCodeAtom };
+export { selectedMarkerDetailAtom, currentGpsAtom, commonCodeAtom };

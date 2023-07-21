@@ -10,12 +10,10 @@ const Sidebar = () => {
 
   return (
     <>
-      <section className="flex flex-col">
-        <div className="h-12">
-          <SearchBar />
-        </div>
+      <section className="flex flex-col w-[390px]">
+        <SearchBar />
         <div
-          className={`inline-block w-[390px] relative h-full p-4 bg-gray-200 overflow-hidden`}
+          className={`inline-block relative h-[calc(100%-3rem)] p-4 bg-gray-200 overflow-hidden`}
         >
           {selectedMarkerDetail ? (
             <>

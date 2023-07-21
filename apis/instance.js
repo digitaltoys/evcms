@@ -1,9 +1,15 @@
 import axios from "axios";
 
-const API_SERVER = "/api/";
+const EV_API_SERVER = "/api/";
+const KAKAO_REST_API_SERVER = "https://dapi.kakao.com/v2/local/search";
 
-const axiosInstance = axios.create({
-  baseURL: API_SERVER,
+export const evApiInstance = axios.create({
+  baseURL: EV_API_SERVER,
 });
 
-export default axiosInstance;
+export const kakaoRestApiInstance = axios.create({
+  baseURL: KAKAO_REST_API_SERVER,
+  headers: {
+    Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}`,
+  },
+});

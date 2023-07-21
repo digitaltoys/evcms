@@ -1,6 +1,7 @@
-import axiosInstance from "./instance";
 import axios from "axios";
-import { useAtom, useSetAtom, useAtomValue } from "jotai";
+import { useSetAtom } from "jotai";
+
+import { evApiInstance } from "./instance";
 import { commonCodeAtom } from "../atoms/atom";
 
 /**
@@ -9,8 +10,8 @@ import { commonCodeAtom } from "../atoms/atom";
  */
 export const getStationList = async () => {
   try {
-    const response = await axiosInstance("/station");
-    // const response = await axiosInstance("/station?zscode=11110");
+    const response = await { evApiInstance }("/station");
+    // const response = await evApiInstance("/station?zscode=11110");
     return response.data;
   } catch (err) {
     throw err;
@@ -34,7 +35,7 @@ export const getStationList = async () => {
  */
 export const getBoundStationList = async (params) => {
   try {
-    const response = await axiosInstance("/station", { params });
+    const response = await evApiInstance("/station", { params });
     return response.data;
   } catch (err) {
     throw err;
@@ -48,7 +49,7 @@ export const getBoundStationList = async (params) => {
  */
 export const getStationDetail = async (statId) => {
   try {
-    const response = await axiosInstance(`/station/${statId}`);
+    const response = await evApiInstance(`/station/${statId}`);
     return response.data;
   } catch (err) {
     throw err;
@@ -57,7 +58,7 @@ export const getStationDetail = async (statId) => {
 
 export const getChargerList = async (statId) => {
   try {
-    const response = await axiosInstance(`/station/${statId}/charger`);
+    const response = await evApiInstance(`/station/${statId}/charger`);
     return response.data;
   } catch (err) {
     throw err;

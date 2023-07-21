@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import "../styles/components/map.css";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
-import { selectedMarkerDetailAtom } from "../atoms/atom";
+import { currentGpsAtom, selectedMarkerDetailAtom } from "../atoms/atom";
 import Filter from "./filter";
 
 const Map = () => {
-  const [gps, setGps] = useState({ lat: null, lng: null });
+  const [currentGps, setCurrentGps] = useAtom(currentGpsAtom);
+  const setSelectedMarkerDetail = useSetAtom(selectedMarkerDetailAtom);
+
   const [stationList, setStationList] = useState(null);
   const [markerList, setMarkerList] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const stationOverlayRef = useRef(null);
   const mapRef = useRef(null);
-
-  const setSelectedMarkerDetail = useSetAtom(selectedMarkerDetailAtom);
 
   const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
 
@@ -34,7 +34,7 @@ const Map = () => {
       window.kakao.maps.load(async () => {
         // 현재 위치 받아오기
         const { lat, lng } = await getGps();
-        setGps({ lat, lng });
+        setCurrentGps({ lat, lng });
 
         // 카카오지도 생성
         const container = document.querySelector("#map");
@@ -269,7 +269,7 @@ const Map = () => {
   };
 
   const handleClickMyLocation = () => {
-    const { lat, lng } = gps;
+    const { lat, lng } = currentGps;
     const moveLatLng = new window.kakao.maps.LatLng(lat, lng);
     mapRef.current.panTo(moveLatLng);
   };
