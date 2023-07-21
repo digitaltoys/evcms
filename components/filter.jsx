@@ -101,10 +101,12 @@ const Filter = () => {
       className={`inline-block absolute top-4 right-4 z-10 ${
         isFilterOpen ? "w-[32rem]" : "w-10 h-10"
       } rounded-lg bg-white shadow-lg transition-all ease-in-out duration-300`}
-      ref={filterRef}
     >
       {isFilterOpen ? (
-        <div className="flex flex-col w-full h-full px-4 select-none">
+        <div
+          className="flex flex-col w-full h-full px-4 select-none"
+          ref={filterRef}
+        >
           <div className="flex justify-center items-center relative p-4 border-b-2">
             <h3 className="text-xl font-bold">필터설정</h3>
             <button

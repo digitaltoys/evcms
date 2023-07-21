@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSetAtom } from "jotai";
 
+import { MapPinIcon } from "@heroicons/react/24/outline";
 import "../styles/components/map.css";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import { selectedMarkerDetailAtom } from "../atoms/atom";
-import { AdjustmentsVerticalIcon } from "@heroicons/react/24/outline";
 import Filter from "./filter";
 
 const Map = () => {
@@ -268,10 +268,26 @@ const Map = () => {
     });
   };
 
+  const handleClickMyLocation = () => {
+    const { lat, lng } = gps;
+    const moveLatLng = new window.kakao.maps.LatLng(lat, lng);
+    mapRef.current.panTo(moveLatLng);
+  };
+
   return (
     <section className="w-[calc(100%-390px)] h-full">
       <div id="map" className="w-full h-full"></div>
-      <Filter />
+      {mapRef && <Filter />}
+      <div className="absolute right-4 bottom-4 z-10">
+        <button
+          className="w-10 h-10 flex justify-center items-center rounded-lg shadow-md bg-white hover:text-green-600 transition-all ease-linear duration-100"
+          onClick={handleClickMyLocation}
+        >
+          <span>
+            <MapPinIcon width={24} height={24} />
+          </span>
+        </button>
+      </div>
     </section>
   );
 };
