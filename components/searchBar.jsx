@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { getSearchAutocomplete } from "../apis/kakaoRestApi";
@@ -15,6 +15,9 @@ const SearchBar = () => {
   const [highlightText, setHighlightText] = useState("");
   const [autocompleteIndex, setAutocompleteIndex] = useState(-1);
 
+  const inputRef = useRef(null);
+
+  // inputText를 입력했을 때만 자동완성 fetch. 마우스나 키보드로 자동완성 이동으로 생기는 inputText 변경시엔 fetch 안함.
   useEffect(() => {
     if (!searchInputText.trim()) {
       setSearchAutocompleteList(null);
@@ -25,6 +28,21 @@ const SearchBar = () => {
       fetchSearchAutocomplete(searchInputText, currentGps);
     }
   }, [searchInputText]);
+
+  // input 바깥 클릭시 focus blur
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (inputRef.current && !inputRef.current.contains(e.target)) {
+        inputRef.current.blur();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // handler
   const handleFocusInput = (e) => {
@@ -48,7 +66,7 @@ const SearchBar = () => {
   };
 
   const handleKeydownInput = (e) => {
-    if (searchAutocompleteList.documents.length) {
+    if (searchAutocompleteList && searchAutocompleteList.documents.length) {
       const lastIndex = searchAutocompleteList.documents.length - 1;
       if (e.key === "ArrowUp") {
         e.preventDefault();
@@ -105,41 +123,44 @@ const SearchBar = () => {
             onBlur={handleFocusInput}
             onKeyDown={handleKeydownInput}
             value={searchInputText}
+            ref={inputRef}
           />
         </form>
         <span className="inline-flex justify-center items-center w-1/12 h-full">
           <MagnifyingGlassIcon width={24} height={24} />
         </span>
       </div>
-      {searchAutocompleteList && !!searchInputText.trim() && (
-        <div className="absolute top-12 w-full z-10 py-4 bg-white shadow-md">
-          <ul className="flex flex-col gap-2 select-none">
-            {searchAutocompleteList.documents.map((item, idx) => (
-              <li
-                key={item.id}
-                className={`${
-                  idx === autocompleteIndex && "bg-gray-200"
-                } py-2 px-4 cursor-pointer`}
-                data-index={idx}
-                data-name={item.place_name}
-                onMouseEnter={handleMouseenterInput}
-              >
-                <div>
-                  <SearchHighlightText
-                    text={item.place_name}
-                    searchInputText={highlightText}
-                  />
-                </div>
-                <div className="flex items-center">
-                  <span className="text-sm">{item.address_name}</span>
-                  <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
-                  <span className="text-sm">{item.distance}m</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {searchAutocompleteList &&
+        isSearchInputFocus &&
+        !!searchInputText.trim() && (
+          <div className="absolute top-12 w-full z-10 py-4 bg-white shadow-md">
+            <ul className="flex flex-col gap-2 select-none">
+              {searchAutocompleteList.documents.map((item, idx) => (
+                <li
+                  key={item.id}
+                  className={`${
+                    idx === autocompleteIndex && "bg-gray-200"
+                  } py-2 px-4 cursor-pointer`}
+                  data-index={idx}
+                  data-name={item.place_name}
+                  onMouseEnter={handleMouseenterInput}
+                >
+                  <div>
+                    <SearchHighlightText
+                      text={item.place_name}
+                      searchInputText={highlightText}
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-sm">{item.address_name}</span>
+                    <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
+                    <span className="text-sm">{item.distance}m</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
     </div>
   );
 };
