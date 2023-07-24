@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useAtomValue } from "jotai";
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { getSearchAutocomplete } from "../../apis/kakaoRestApi";
-import { useAtomValue } from "jotai";
 import { currentGpsAtom } from "../../atoms/atom";
 
 const SearchBar = () => {
@@ -94,10 +94,7 @@ const SearchBar = () => {
   };
 
   const handleMouseenterInput = (e) => {
-    setIsInputTyping(false);
     setAutocompleteIndex(Number(e.currentTarget.dataset.index));
-
-    setSearchInputText(e.currentTarget.dataset.name);
   };
 
   // helper
@@ -135,29 +132,35 @@ const SearchBar = () => {
         !!searchInputText.trim() && (
           <div className="absolute top-12 w-full z-10 py-4 bg-white shadow-md">
             <ul className="flex flex-col gap-2 select-none">
-              {searchAutocompleteList.documents.map((item, idx) => (
-                <li
-                  key={item.id}
-                  className={`${
-                    idx === autocompleteIndex && "bg-gray-200"
-                  } py-2 px-4 cursor-pointer`}
-                  data-index={idx}
-                  data-name={item.place_name}
-                  onMouseEnter={handleMouseenterInput}
-                >
-                  <div>
-                    <SearchHighlightText
-                      text={item.place_name}
-                      searchInputText={highlightText}
-                    />
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm">{item.address_name}</span>
-                    <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
-                    <span className="text-sm">{item.distance}m</span>
-                  </div>
+              {searchAutocompleteList.documents.length ? (
+                searchAutocompleteList.documents.map((item, idx) => (
+                  <li
+                    key={item.id}
+                    className={`${
+                      idx === autocompleteIndex && "bg-gray-200"
+                    } py-2 px-4 cursor-pointer`}
+                    data-index={idx}
+                    data-name={item.place_name}
+                    onMouseEnter={handleMouseenterInput}
+                  >
+                    <div>
+                      <SearchHighlightText
+                        text={item.place_name}
+                        searchInputText={highlightText}
+                      />
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-sm">{item.address_name}</span>
+                      <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
+                      <span className="text-sm">{item.distance}m</span>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li>
+                  <div className="py-2 px-4">검색 결과가 없습니다.</div>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
         )}
