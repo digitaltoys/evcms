@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import Map from "../components/map";
-import Sidebar from "../components/sidebar";
+import { Sidebar } from "../components/sidebar";
 import { getGeo2Addr } from "../apis/evApi";
 
 export default function Home() {

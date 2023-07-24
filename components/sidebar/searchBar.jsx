@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { getSearchAutocomplete } from "../apis/kakaoRestApi";
+import { getSearchAutocomplete } from "../../apis/kakaoRestApi";
 import { useAtomValue } from "jotai";
-import { currentGpsAtom } from "../atoms/atom";
+import { currentGpsAtom } from "../../atoms/atom";
 
 const SearchBar = () => {
   const currentGps = useAtomValue(currentGpsAtom);
@@ -167,7 +167,7 @@ const SearchBar = () => {
 
 export default SearchBar;
 
-// 자동완성 하이라이팅 helper component
+// 자동완성 하이라이팅 scomponent
 const SearchHighlightText = ({ text, searchInputText }) => {
   const regex = new RegExp(`(${searchInputText})`, "gi");
   const parts = text.split(regex);
