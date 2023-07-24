@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { getSearchAutocomplete } from "../../apis/kakaoRestApi";
 import { currentGpsAtom } from "../../atoms/atom";
 
-const SearchBar = () => {
+const SearchBar = ({ handleSetPlaceList }) => {
   const currentGps = useAtomValue(currentGpsAtom);
 
   const [isInputTyping, setIsInputTyping] = useState(false);
@@ -33,7 +33,7 @@ const SearchBar = () => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (inputRef.current && !inputRef.current.contains(e.target)) {
-        inputRef.current.blur();
+        setIsSearchInputFocus(false);
       }
     };
 
@@ -44,6 +44,10 @@ const SearchBar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isSearchInputFocus) inputRef.current.blur();
+  }, [isSearchInputFocus]);
+
   // handler
   const handleFocusInput = (e) => {
     setIsSearchInputFocus(e.type === "focus");
@@ -51,8 +55,13 @@ const SearchBar = () => {
 
   const handleFormSubmit = async (e) => {
     try {
-      e.preventDefault();
+      // event가 존재할 경우 -> enter로 submit 이벤트 발생했으므로 preventDefault()
+      if (e) e.preventDefault();
+      if (searchInputText.trim().length === 0) return;
       const data = await getSearchAutocomplete(searchInputText, currentGps);
+      console.log(data);
+      handleSetPlaceList(data.documents);
+      setIsSearchInputFocus(false);
     } catch (err) {
       throw err;
     }
@@ -65,9 +74,9 @@ const SearchBar = () => {
     setAutocompleteIndex(-1);
   };
 
-  const handleKeydownInput = (e) => {
-    if (searchAutocompleteList && searchAutocompleteList.documents.length) {
-      const lastIndex = searchAutocompleteList.documents.length - 1;
+  const handleInputKeydown = (e) => {
+    if (searchAutocompleteList && searchAutocompleteList.length) {
+      const lastIndex = searchAutocompleteList.length - 1;
       if (e.key === "ArrowUp") {
         e.preventDefault();
 
@@ -76,9 +85,7 @@ const SearchBar = () => {
         setAutocompleteIndex(curIndex);
 
         if (curIndex >= 0) {
-          setSearchInputText(
-            searchAutocompleteList.documents[curIndex].place_name
-          );
+          setSearchInputText(searchAutocompleteList[curIndex].place_name);
         }
       }
       if (e.key === "ArrowDown") {
@@ -86,39 +93,45 @@ const SearchBar = () => {
         setIsInputTyping(false);
         const curIndex = Math.min(autocompleteIndex + 1, lastIndex);
         setAutocompleteIndex(curIndex);
-        setSearchInputText(
-          searchAutocompleteList.documents[curIndex].place_name
-        );
+        setSearchInputText(searchAutocompleteList[curIndex].place_name);
       }
     }
   };
 
-  const handleMouseenterInput = (e) => {
+  const handleMouseenterListItem = (e) => {
     setAutocompleteIndex(Number(e.currentTarget.dataset.index));
+  };
+
+  const handleMouseDownListItem = (e) => {
+    setSearchInputText(e.currentTarget.dataset.name);
+    setHighlightText(e.currentTarget.dataset.name);
+    handleFormSubmit();
   };
 
   // helper
   const fetchSearchAutocomplete = async (keyword, gps) => {
     try {
       if (!keyword) return;
-      const data = await getSearchAutocomplete(keyword, gps);
-      setSearchAutocompleteList(data);
+      const { documents } = await getSearchAutocomplete(keyword, gps);
+      setSearchAutocompleteList(documents);
     } catch (err) {
       throw err;
     }
   };
   return (
     <div className="relative w-[390px] h-12">
-      <div className="flex w-full h-full px-4 py-2 border-r-2 border-y-2">
+      <div className="flex w-full h-full px-4 py-2 border-b-[1px]">
         <form className="w-11/12 h-full" onSubmit={handleFormSubmit}>
           <input
             type="text"
             placeholder="주소 검색"
             className="h-full w-full focus:outline-none"
+            name="keyword"
+            autoComplete="off"
             onChange={handleInputChange}
             onFocus={handleFocusInput}
             onBlur={handleFocusInput}
-            onKeyDown={handleKeydownInput}
+            onKeyDown={handleInputKeydown}
             value={searchInputText}
             ref={inputRef}
           />
@@ -132,8 +145,8 @@ const SearchBar = () => {
         !!searchInputText.trim() && (
           <div className="absolute top-12 w-full z-10 py-4 bg-white shadow-md">
             <ul className="flex flex-col gap-2 select-none">
-              {searchAutocompleteList.documents.length ? (
-                searchAutocompleteList.documents.map((item, idx) => (
+              {searchAutocompleteList.length ? (
+                searchAutocompleteList.map((item, idx) => (
                   <li
                     key={item.id}
                     className={`${
@@ -141,7 +154,8 @@ const SearchBar = () => {
                     } py-2 px-4 cursor-pointer`}
                     data-index={idx}
                     data-name={item.place_name}
-                    onMouseEnter={handleMouseenterInput}
+                    onMouseEnter={handleMouseenterListItem}
+                    onMouseDown={handleMouseDownListItem}
                   >
                     <div>
                       <SearchHighlightText
@@ -150,7 +164,7 @@ const SearchBar = () => {
                       />
                     </div>
                     <div className="flex items-center">
-                      <span className="text-sm">{item.address_name}</span>
+                      <span className="text-sm">{item.road_address_name}</span>
                       <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
                       <span className="text-sm">{item.distance}m</span>
                     </div>
@@ -170,7 +184,7 @@ const SearchBar = () => {
 
 export default SearchBar;
 
-// 자동완성 하이라이팅 scomponent
+// 자동완성 하이라이팅 component
 const SearchHighlightText = ({ text, searchInputText }) => {
   const regex = new RegExp(`(${searchInputText})`, "gi");
   const parts = text.split(regex);
