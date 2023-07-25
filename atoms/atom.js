@@ -1,7 +1,17 @@
 import { atom } from "jotai";
 
-const selectedMarkerDetailAtom = atom(null);
-const currentGpsAtom = atom({ lat: null, lng: null });
 const commonCodeAtom = atom(null);
 
-export { selectedMarkerDetailAtom, currentGpsAtom, commonCodeAtom };
+// map component
+const currentGpsAtom = atom({ lat: null, lng: null });
+const selectedMarkerDetailAtom = atom(null);
+
+//sidebar component
+const searchPlaceListAtom = atom(null);
+
+export {
+  commonCodeAtom,
+  currentGpsAtom,
+  selectedMarkerDetailAtom,
+  searchPlaceListAtom,
+};

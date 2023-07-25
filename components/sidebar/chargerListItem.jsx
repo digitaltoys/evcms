@@ -17,13 +17,14 @@ const STAT_COLOR = {
 };
 
 const ChargerListItem = ({ charger }) => {
-  const { stat, chgerType } = charger;
+  const { stat, chgerType, output } = charger;
   return (
-    <li className="flex w-full h-20 mb-3 rounded-2xl bg-white select-none">
+    <li className="flex w-full h-20 mb-3 rounded-2xl bg-white select-none border-[1px]">
       <div
-        className={`flex grow justify-center items-center font-bold ${STAT_COLOR[stat]}`}
+        className={`flex flex-col grow justify-center items-center font-bold ${STAT_COLOR[stat]}`}
       >
         <span>{CHARGER_STAT[stat]}</span>
+        {output && <span className="text-sm">{output} kW</span>}
       </div>
       <div className="flex flex-col basis-16 max-w-[64px] grow justify-center items-center">
         <AC3

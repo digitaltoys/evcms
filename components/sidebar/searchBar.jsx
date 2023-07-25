@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAtomValue } from "jotai";
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { getSearchAutocomplete } from "../../apis/kakaoRestApi";
+import {
+  getSearchAutocomplete,
+  getSearchResult,
+} from "../../apis/kakaoRestApi";
 import { currentGpsAtom } from "../../atoms/atom";
 
 const SearchBar = ({ handleSetPlaceList }) => {
@@ -58,7 +61,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
       // event가 존재할 경우 -> enter로 submit 이벤트 발생했으므로 preventDefault()
       if (e) e.preventDefault();
       if (searchInputText.trim().length === 0) return;
-      const data = await getSearchAutocomplete(searchInputText, currentGps);
+      const data = await getSearchResult(searchInputText, currentGps);
       console.log(data);
       handleSetPlaceList(data.documents);
       setIsSearchInputFocus(false);
@@ -146,30 +149,34 @@ const SearchBar = ({ handleSetPlaceList }) => {
           <div className="absolute top-12 w-full z-10 py-4 bg-white shadow-md">
             <ul className="flex flex-col gap-2 select-none">
               {searchAutocompleteList.length ? (
-                searchAutocompleteList.map((item, idx) => (
-                  <li
-                    key={item.id}
-                    className={`${
-                      idx === autocompleteIndex && "bg-gray-200"
-                    } py-2 px-4 cursor-pointer`}
-                    data-index={idx}
-                    data-name={item.place_name}
-                    onMouseEnter={handleMouseenterListItem}
-                    onMouseDown={handleMouseDownListItem}
-                  >
-                    <div>
-                      <SearchHighlightText
-                        text={item.place_name}
-                        searchInputText={highlightText}
-                      />
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-sm">{item.road_address_name}</span>
-                      <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
-                      <span className="text-sm">{item.distance}m</span>
-                    </div>
-                  </li>
-                ))
+                searchAutocompleteList
+                  .sort((a, b) => a.distance - b.distance)
+                  .map((item, idx) => (
+                    <li
+                      key={item.id}
+                      className={`${
+                        idx === autocompleteIndex && "bg-gray-200"
+                      } py-2 px-4 cursor-pointer`}
+                      data-index={idx}
+                      data-name={item.place_name}
+                      onMouseEnter={handleMouseenterListItem}
+                      onMouseDown={handleMouseDownListItem}
+                    >
+                      <div>
+                        <SearchHighlightText
+                          text={item.place_name}
+                          searchInputText={highlightText}
+                        />
+                      </div>
+                      <div className="flex items-center">
+                        <span className="text-sm">
+                          {item.road_address_name}
+                        </span>
+                        <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
+                        <span className="text-sm">{item.distance}m</span>
+                      </div>
+                    </li>
+                  ))
               ) : (
                 <li>
                   <div className="py-2 px-4">검색 결과가 없습니다.</div>
