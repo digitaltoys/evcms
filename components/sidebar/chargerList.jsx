@@ -7,8 +7,8 @@ import { selectedMarkerDetailAtom } from "../../atoms/atom";
 const ChargerList = () => {
   const selectedMarkerDetail = useAtomValue(selectedMarkerDetailAtom);
   return (
-    <div className="w-full h-full">
-      <div className="w-full h-60 mb-3 bg-white rounded-2xl"></div>
+    <div className="w-full h-full p-4">
+      <div className="w-full h-60 mb-3 bg-white rounded-2xl border-[1px]"></div>
       <div className="h-[calc(100%-240px)] overflow-y-scroll no-scrollbar">
         <ul>
           {selectedMarkerDetail.Chargers.map((charger) => (

@@ -1,15 +1,20 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import "../styles/components/map.css";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
-import { currentGpsAtom, selectedMarkerDetailAtom } from "../atoms/atom";
+import {
+  currentGpsAtom,
+  searchPlaceListAtom,
+  selectedMarkerDetailAtom,
+} from "../atoms/atom";
 import Filter from "./filter";
 
-const Map = () => {
+const Map = forwardRef((props, ref) => {
   const [currentGps, setCurrentGps] = useAtom(currentGpsAtom);
   const setSelectedMarkerDetail = useSetAtom(selectedMarkerDetailAtom);
+  const setSearchPlaceList = useSetAtom(searchPlaceListAtom);
 
   const [stationList, setStationList] = useState(null);
   const [markerList, setMarkerList] = useState([]);
@@ -21,7 +26,6 @@ const Map = () => {
 
   // 카카오맵 Init
   useEffect(() => {
-    console.log("%c Init useEffect", "color:blue");
     const script = document.createElement("script");
 
     script.async = true;
@@ -44,20 +48,14 @@ const Map = () => {
         };
         const newMap = new window.kakao.maps.Map(container, options);
         mapRef.current = newMap;
+        ref.current = newMap;
 
         // 충전소 data fetching
         fetchStationList(mapRef.current);
 
         // 카카오지도 이벤트 등록
-        window.kakao.maps.event.addListener(
-          newMap,
-          "zoom_changed",
-          function () {
-            reFetchStationList(mapRef.current);
-          }
-        );
-
-        window.kakao.maps.event.addListener(newMap, "dragend", function () {
+        window.kakao.maps.event.addListener(newMap, "idle", function () {
+          console.log("idle!");
           reFetchStationList(mapRef.current);
         });
       });
@@ -72,6 +70,7 @@ const Map = () => {
   useEffect(() => {
     console.log("%c stationList useEffect", "color: blue");
     if (stationList) {
+      // 화면 이동 후에도 영역에 표시되는 마커는 리렌더링 X
       let existMarkers = markerList.filter((mk) => {
         const pos = mk.getPosition();
         const bounds = mapRef.current.getBounds();
@@ -113,6 +112,7 @@ const Map = () => {
           const moveLocation = new window.kakao.maps.LatLng(lat, lng);
           mapRef.current.panTo(moveLocation);
           setSelectedMarker(marker);
+          setSearchPlaceList(null);
         });
 
         existMarkers.push(marker);
@@ -290,6 +290,6 @@ const Map = () => {
       </div>
     </section>
   );
-};
+});
 
 export default Map;

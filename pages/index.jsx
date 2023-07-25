@@ -1,26 +1,16 @@
-import { useEffect } from "react";
+import { useRef } from "react";
 
 import Map from "../components/map";
 import { Sidebar } from "../components/sidebar";
-import { getGeo2Addr } from "../apis/evApi";
 
 export default function Home() {
-  console.log("index------------------------");
-  // let addr = {};
-  useEffect(() => {
-    console.log("mount------------------------");
-    let fetchAddr = async () => {
-      let addr = await getGeo2Addr(126.98, 37.569);
-      let zcode = addr.code.substr(0, 2);
-      let zscode = addr.code.substr(0, 5);
-    };
-    fetchAddr();
-  }, []);
+  const mapRef = useRef(null);
+  console.log(mapRef);
 
   return (
     <div className="relative inline-flex w-full h-full">
-      <Sidebar />
-      <Map />
+      <Sidebar ref={mapRef} />
+      <Map ref={mapRef} />
     </div>
   );
 }
