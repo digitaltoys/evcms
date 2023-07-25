@@ -50,6 +50,17 @@ const Map = forwardRef((props, ref) => {
         mapRef.current = newMap;
         ref.current = newMap;
 
+        // 사용자 gps 위치에 marker (오버레이) 생성
+        const content = `<div class="pin"></div><div class="pulse"></div>`;
+        const userPosition = new window.kakao.maps.LatLng(lat, lng);
+        const userMarkerOverlay = new window.kakao.maps.CustomOverlay({
+          position: userPosition,
+          content,
+          yAnchor: 0.9,
+          xAnchor: 0.7,
+        });
+        userMarkerOverlay.setMap(newMap);
+
         // 충전소 data fetching
         fetchStationList(mapRef.current);
 
@@ -249,6 +260,7 @@ const Map = forwardRef((props, ref) => {
 
     const position = new window.kakao.maps.LatLng(lat, lng);
     const newStationOverlay = new window.kakao.maps.CustomOverlay({
+      clickable: true,
       position,
       content: overlayContainer,
       yAnchor: 1.2,
