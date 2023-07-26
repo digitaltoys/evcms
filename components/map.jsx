@@ -56,8 +56,7 @@ const Map = forwardRef((props, ref) => {
         const userMarkerOverlay = new window.kakao.maps.CustomOverlay({
           position: userPosition,
           content,
-          yAnchor: 0.9,
-          xAnchor: 0.7,
+          zIndex: 10,
         });
         userMarkerOverlay.setMap(newMap);
 
@@ -66,7 +65,6 @@ const Map = forwardRef((props, ref) => {
 
         // 카카오지도 이벤트 등록
         window.kakao.maps.event.addListener(newMap, "idle", function () {
-          console.log("idle!");
           reFetchStationList(mapRef.current);
         });
       });
@@ -217,7 +215,7 @@ const Map = forwardRef((props, ref) => {
     const titleWrapper = document.createElement("div");
     titleWrapper.className = "title__wrapper";
     const title = document.createElement("h1");
-    title.innerText = statNm;
+    title.innerText = statNm.length > 20 ? `${statNm.slice(0, 20)}...` : statNm;
     const closeButton = document.createElement("button");
     closeButton.innerText = "닫기";
 
