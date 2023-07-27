@@ -7,7 +7,7 @@ import {
 } from "../../atoms/atom";
 import SearchBar from "./searchBar";
 import ChargerList from "./chargerList";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { BoltIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const Sidebar = forwardRef((props, mapRef) => {
   // const [searchPlaceList, setSearchPlaceList] = useState(null);
@@ -23,7 +23,7 @@ const Sidebar = forwardRef((props, mapRef) => {
     mapRef.current.setLevel(2);
     mapRef.current.setCenter(new window.kakao.maps.LatLng(lat, lng));
   };
-  console.log(searchPlaceList);
+
   return (
     <>
       <section className="flex flex-col w-[390px] border-[1px] border-solid border-gray-200">
@@ -74,7 +74,9 @@ const Sidebar = forwardRef((props, mapRef) => {
             <ChargerList />
           ) : (
             <div className="w-full h-full p-4 flex justify-center items-center">
-              <span>충전소를 선택해주세요!</span>
+              <span>
+                <BoltIcon className="w-64 h-64 text-gray-100" />
+              </span>
             </div>
           )}
         </div>
