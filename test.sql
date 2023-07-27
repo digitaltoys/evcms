@@ -29,3 +29,18 @@ INSERT OR REPLACE INTO Station(chgerCnt, statNm, statId, addr, location, useTime
 
 select * from Station 
 where "37.55" < lat and lat < "37.60";
+
+select max(stat), * from Charger where ""=""  and lat>"37.56687331506491" and lng>"126.97633183666672" and lat<"37.57466829739018" and lng<"126.98463842886599" group by statId;
+select stat, * from Charger where ""=""  and lat>"37.56687331506491" and lng>"126.97633183666672" and lat<"37.57466829739018" and lng<"126.98463842886599";
+select * FROM commonCode where category="chgerStat" ;
+
+chgerStat	0	알수없음	91
+chgerStat	1	통신이상	40
+chgerStat	2	사용가능	10
+chgerStat	3	충전중	    20
+chgerStat	4	운영중지	50
+chgerStat	5	점검중	    30
+chgerStat	9	알수없음	90
+select min(comment), * FROM Charger join commonCode on Charger.stat= commonCode.code 
+where category="chgerStat" and lat>"37.56687331506491" and lng>"126.97633183666672" and lat<"37.57466829739018" and lng<"126.98463842886599" 
+group by statId;
