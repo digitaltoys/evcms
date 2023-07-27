@@ -1,8 +1,8 @@
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 
-import { MapPinIcon } from "@heroicons/react/24/outline";
 import "../styles/components/map.css";
+import { MapPinIcon } from "@heroicons/react/24/outline";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import {
   currentGpsAtom,
@@ -210,57 +210,83 @@ const Map = forwardRef((props, ref) => {
       Chargers,
     } = detail;
 
-    const overlayContainer = document.createElement("div");
-    overlayContainer.className = "overlay__container";
-    const titleWrapper = document.createElement("div");
-    titleWrapper.className = "title__wrapper";
-    const title = document.createElement("h1");
-    title.innerText = statNm.length > 20 ? `${statNm.slice(0, 20)}...` : statNm;
-    const closeButton = document.createElement("button");
-    closeButton.innerText = "닫기";
-
-    const contentWrapper = document.createElement("div");
-    contentWrapper.className = "content__wrapper";
-    const contentListWrapper = document.createElement("ul");
-    contentListWrapper.className = "content-list__wrapper";
-
-    const liAddress = document.createElement("li");
-    liAddress.innerText = `주소 : ${addr}`;
-    const liAddressDetail = document.createElement("li");
-    liAddressDetail.innerText = `상세주소 : ${
-      location ? location : "정보가 없습니다."
-    }`;
-    const liTel = document.createElement("li");
-    liTel.innerText = `전화번호 : ${busiCall}`;
-    const liTime = document.createElement("li");
-    liTime.innerText = `운영시간 : ${useTime}`;
-    const liCompany = document.createElement("li");
-    liCompany.innerText = `운영기관 : ${busiNm}`;
-    const liCharger = document.createElement("li");
-    liCharger.innerText = `충전현황 : ${
-      Chargers.filter((item) => item.stat === "2").length
-    } / ${Chargers.length}`;
-
-    contentListWrapper.appendChild(liAddress);
-    contentListWrapper.appendChild(liAddressDetail);
-    contentListWrapper.appendChild(liTel);
-    contentListWrapper.appendChild(liTime);
-    contentListWrapper.appendChild(liCompany);
-    contentListWrapper.appendChild(liCharger);
-
-    contentWrapper.appendChild(contentListWrapper);
-
-    titleWrapper.appendChild(title);
-    titleWrapper.appendChild(closeButton);
-
-    overlayContainer.appendChild(titleWrapper);
-    overlayContainer.appendChild(contentWrapper);
+    const overlayContent = `
+    <div class="overlay__container">
+      <div class="title__wrapper">
+        <h1 class="overlay-title">${statNm}</h1>
+        <button id="overlay-close">
+          <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="content__wrapper">
+        <ul class="content-list__wrapper">
+          <li class="content-list__item">
+            <span class="list-icon">
+              <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"></path>
+              </svg>
+            </span>
+            <span class="list-description">${addr}</span>
+          </li>
+          <li class="content-list__item">
+            <span class="list-icon">
+              <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"></path>
+              </svg>
+            </span>
+            <span class="list-description">${
+              location ? location : "상세주소가 없습니다."
+            }</span>
+          </li>
+          <li class="content-list__item">
+            <span class="list-icon">
+              <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"></path>
+              </svg>
+            </span>
+            <span class="list-description">${busiCall}</span>
+          </li>
+          <li class="content-list__item">
+            <span class="list-icon">
+              <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </span>
+            <span class="list-description">${useTime}</span>
+          </li>
+          <li class="content-list__item">
+            <span class="list-icon">
+              <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"></path>
+              </svg>
+            </span>
+            <span class="list-description">${busiNm}</span>
+          </li>
+          <li class="content-list__item">
+            <span class="list-icon">
+              <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path>
+              </svg>
+            </span>
+            <span class="list-description">
+              ${Chargers.filter((item) => item.stat === "2").length} / ${
+      Chargers.length
+    }
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    `;
 
     const position = new window.kakao.maps.LatLng(lat, lng);
     const newStationOverlay = new window.kakao.maps.CustomOverlay({
       clickable: true,
       position,
-      content: overlayContainer,
+      content: overlayContent,
       yAnchor: 1.2,
       zIndex: 100,
     });
@@ -270,6 +296,7 @@ const Map = forwardRef((props, ref) => {
     newStationOverlay.setMap(mapRef.current);
     stationOverlayRef.current = newStationOverlay;
 
+    const closeButton = document.querySelector("#overlay-close");
     closeButton.addEventListener("click", () => {
       stationOverlayRef.current.setMap(null);
       stationOverlayRef.current = null;

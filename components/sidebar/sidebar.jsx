@@ -20,7 +20,7 @@ const Sidebar = forwardRef((props, ref) => {
   };
 
   const handlePlaceResultItemClick = (lat, lng) => {
-    ref.current.panTo(new window.kakao.maps.LatLng(lat, lng));
+    ref.current.setCenter(new window.kakao.maps.LatLng(lat, lng));
     ref.current.setLevel(2);
   };
   console.log(searchPlaceList);
