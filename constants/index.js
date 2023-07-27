@@ -1,3 +1,4 @@
+// map
 export const BUS_ID = {
   AM: "아마노코리아",
   BA: "부안군",
@@ -112,6 +113,30 @@ export const CHARGER_STAT = {
   9: "상태미확인",
 };
 
+export const CHARGER_LOGO_STAT_CONVERTER = {
+  0: 4,
+  1: 4,
+  2: 1,
+  3: 2,
+  4: 3,
+  5: 3,
+  9: 4,
+};
+
+export const EXIST_CHARGER_LOGO = [
+  "BT",
+  "CV",
+  "EP",
+  "EV",
+  "GN",
+  "HE",
+  "JD",
+  "KP",
+  "ME",
+  "PI",
+  "ST",
+];
+
 export const CHARGER_TYPE = {
   "01": ["DC차데모"],
   "02": ["AC완속"],
@@ -137,7 +162,6 @@ export const STATION_KIND = {
 };
 
 // filter
-
 export const CHARGING_SPEED = ["완속", "급속", "초급속"];
 export const CHARGING_TYPE = ["AC완속", "AC3상", "DC차데모", "DC콤보"];
 export const OPERATING_AGENCY = [

@@ -87,10 +87,14 @@ export default async function handler(req, res) {
   condition += w ? ` and lng>"${w}"` : "";
   condition += n ? ` and lat<"${n}"` : "";
   condition += e ? ` and lng<"${e}"` : "";
-  console.log(`select min(comment), * FROM Charger join commonCode on Charger.stat= commonCode.code where commonCode.category="chgerStat" ${condition}`);
+  console.log(
+    `select min(comment), * FROM Charger join commonCode on Charger.stat= commonCode.code where commonCode.category="chgerStat" ${condition} group by statId`
+  );
 
-  const Chargers = await db.all(`select * from Station where 1=1 ${condition}`);
-  // const Chargers = await db.all('select * from Station')
-  console.log(Chargers);
+  // const Chargers = await db.all(`select * from Station where 1=1 ${condition}`);
+  const Chargers = await db.all(
+    `select min(comment), * FROM Charger join commonCode on Charger.stat= commonCode.code where commonCode.category="chgerStat" ${condition} group by statId`
+  );
+  // console.log(Chargers);
   res.status(200).json(Chargers);
 }

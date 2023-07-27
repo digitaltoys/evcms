@@ -9,7 +9,7 @@ import SearchBar from "./searchBar";
 import ChargerList from "./chargerList";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-const Sidebar = forwardRef((props, ref) => {
+const Sidebar = forwardRef((props, mapRef) => {
   // const [searchPlaceList, setSearchPlaceList] = useState(null);
 
   const [searchPlaceList, setSearchPlaceList] = useAtom(searchPlaceListAtom);
@@ -20,8 +20,8 @@ const Sidebar = forwardRef((props, ref) => {
   };
 
   const handlePlaceResultItemClick = (lat, lng) => {
-    ref.current.setCenter(new window.kakao.maps.LatLng(lat, lng));
-    ref.current.setLevel(2);
+    mapRef.current.setLevel(2);
+    mapRef.current.setCenter(new window.kakao.maps.LatLng(lat, lng));
   };
   console.log(searchPlaceList);
   return (
