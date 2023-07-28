@@ -5,7 +5,6 @@ import { Sidebar } from "../components/sidebar";
 
 export default function Home() {
   const mapRef = useRef(null);
-  console.log(mapRef);
 
   return (
     <div className="relative inline-flex w-full h-full">

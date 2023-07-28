@@ -20,8 +20,10 @@ const Map = forwardRef((props, ref) => {
   const [stationList, setStationList] = useState(null);
   const [markerList, setMarkerList] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
+
   const stationOverlayRef = useRef(null);
   const mapRef = useRef(null);
+  const bigLogoMarkerRef = useRef(null);
 
   const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
 
@@ -66,8 +68,7 @@ const Map = forwardRef((props, ref) => {
 
         // 카카오지도 이벤트 등록
         window.kakao.maps.event.addListener(newMap, "idle", function () {
-          console.log("idle");
-          reFetchStationList(mapRef.current);
+          fetchStationList(mapRef.current);
         });
       });
     };
@@ -79,7 +80,6 @@ const Map = forwardRef((props, ref) => {
 
   // 충전소 data에 따라 마커 생성
   useEffect(() => {
-    console.log("%c stationList useEffect", "color: blue");
     if (stationList) {
       // 화면 이동 후에도 영역에 표시되는 마커는 리렌더링 X
       let inBoundsMarker = markerList.filter((mk) => {
@@ -104,56 +104,59 @@ const Map = forwardRef((props, ref) => {
 
       for (let station of additionalStations) {
         const { lat, lng, statId, statNm, busiId, stat } = station;
+        const markerImage = makeLogoMarker(busiId, stat, 48, 48);
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
-
-        const logoIconImage = new kakao.maps.MarkerImage(
-          `/marker_icons/in_map_${busiId}${CHARGER_LOGO_STAT_CONVERTER[stat]}.png`,
-          new kakao.maps.Size(48, 48)
-        );
-
-        const etcLogoIconImage = new kakao.maps.MarkerImage(
-          `/marker_icons/in_map_ECT${CHARGER_LOGO_STAT_CONVERTER[stat]}.png`,
-          new kakao.maps.Size(48, 48)
-        );
-
-        const logoIconMarker = new window.kakao.maps.Marker({
+        const logoMarker = new window.kakao.maps.Marker({
           position: markerPosition,
           map: mapRef.current,
           title: statNm,
-          image: EXIST_CHARGER_LOGO.includes(busiId)
-            ? logoIconImage
-            : etcLogoIconImage,
+          image: markerImage,
         });
-        logoIconMarker.id = statId;
+        logoMarker.id = statId;
+        logoMarker.stat = stat;
+        logoMarker.busiId = busiId;
 
-        window.kakao.maps.event.addListener(logoIconMarker, "click", () => {
-          if (
-            stationOverlayRef.current &&
-            logoIconMarker.id === stationOverlayRef.current.id
-          )
-            return;
-          if (stationOverlayRef.current) stationOverlayRef.current.setMap(null);
-          const { Ma: lat, La: lng } = logoIconMarker.getPosition();
-          const moveLocation = new window.kakao.maps.LatLng(lat, lng);
-          mapRef.current.panTo(moveLocation);
-          setSelectedMarker(logoIconMarker);
-          setSearchPlaceList(null);
-        });
+        window.kakao.maps.event.addListener(logoMarker, "click", () =>
+          handleLogoMarkerClick(logoMarker)
+        );
 
-        inBoundsMarker.push(logoIconMarker);
+        inBoundsMarker.push(logoMarker);
       }
 
       setMarkerList(inBoundsMarker);
     }
-
-    console.log(stationList);
   }, [stationList]);
 
-  // selectedMarker 변경시 충전소 세부 내용 data 요청
+  /*
+  selectedMarker 변경시 
+  1. 기존 overlay 닫기
+  2. 해당 마커 좌표를 중심으로 지도 이동
+  3. 해당 충전소 정보 fetch 및 overlay 열기
+  */
   useEffect(() => {
-    console.log("%c selectedMarker useEffect", "color:blue");
     if (selectedMarker) {
-      const statId = selectedMarker.id;
+      if (
+        stationOverlayRef.current &&
+        selectedMarker.id === stationOverlayRef.current.id
+      )
+        return;
+      if (stationOverlayRef.current) stationOverlayRef.current.setMap(null);
+      if (bigLogoMarkerRef.current) {
+        const { busiId, stat } = bigLogoMarkerRef.current;
+        const normalLogoMarker = makeLogoMarker(busiId, stat, 48, 48);
+        bigLogoMarkerRef.current.setImage(normalLogoMarker);
+        bigLogoMarkerRef.current.setZIndex(0);
+      }
+
+      const { Ma: lat, La: lng } = selectedMarker.getPosition();
+      const moveLocation = new window.kakao.maps.LatLng(lat, lng);
+      mapRef.current.panTo(moveLocation);
+
+      const { id, busiId, stat } = selectedMarker;
+      const bigLogoMarker = makeLogoMarker(busiId, stat, 64, 64);
+      selectedMarker.setImage(bigLogoMarker);
+      selectedMarker.setZIndex(5);
+      bigLogoMarkerRef.current = selectedMarker;
 
       const fetchStationDetail = async (id) => {
         try {
@@ -165,11 +168,12 @@ const Map = forwardRef((props, ref) => {
         }
       };
 
-      fetchStationDetail(statId);
+      fetchStationDetail(id);
     }
   }, [selectedMarker]);
 
   // Functions
+  // 현재 위치 받아오기
   const getGps = () => {
     return new Promise((res, rej) => {
       navigator.geolocation.getCurrentPosition(
@@ -186,6 +190,7 @@ const Map = forwardRef((props, ref) => {
     });
   };
 
+  // 충전소 리스트 받아오기
   const fetchStationList = async (map) => {
     try {
       const { ha: lngSW, qa: latSW, oa: lngNE, pa: latNE } = map.getBounds();
@@ -203,18 +208,8 @@ const Map = forwardRef((props, ref) => {
     }
   };
 
-  const reFetchStationList = useCallback(
-    async (map) => {
-      if (stationList !== null) {
-        stationList.forEach((item) => item.setMap(null));
-      }
-      fetchStationList(map);
-    },
-    [stationList]
-  );
-
+  // 마커 클릭 오버레이 생성
   const makeOverlay = (detail) => {
-    console.log(detail);
     const {
       addr,
       location,
@@ -316,11 +311,42 @@ const Map = forwardRef((props, ref) => {
 
     const closeButton = document.querySelector("#overlay-close");
     closeButton.addEventListener("click", () => {
+      const { busiId, stat } = bigLogoMarkerRef.current;
+      const normalLogoMarker = makeLogoMarker(busiId, stat, 48, 48);
+      bigLogoMarkerRef.current.setImage(normalLogoMarker);
+      bigLogoMarkerRef.current.setZIndex(0);
+      bigLogoMarkerRef.current = null;
+
       stationOverlayRef.current.setMap(null);
       stationOverlayRef.current = null;
+
       setSelectedMarker(null);
       setSelectedMarkerDetail(null);
     });
+  };
+
+  // 충전소 로고 마커 생성
+  const makeLogoMarker = (id, stat, width, height) => {
+    const statNumber = CHARGER_LOGO_STAT_CONVERTER[stat];
+    const size = new kakao.maps.Size(width, height);
+
+    if (EXIST_CHARGER_LOGO.includes(id)) {
+      const logoMarkerImage = new kakao.maps.MarkerImage(
+        `/marker_icons/in_map_${id}${statNumber}.png`,
+        size
+      );
+
+      return logoMarkerImage;
+    }
+
+    if (!EXIST_CHARGER_LOGO.includes(id)) {
+      const logoMarkerImage = new kakao.maps.MarkerImage(
+        `/marker_icons/in_map_ECT${statNumber}.png`,
+        size
+      );
+
+      return logoMarkerImage;
+    }
   };
 
   // handler
@@ -330,6 +356,10 @@ const Map = forwardRef((props, ref) => {
     mapRef.current.panTo(moveLatLng);
   };
 
+  const handleLogoMarkerClick = (logoMarker) => {
+    setSelectedMarker(logoMarker);
+    setSearchPlaceList(null);
+  };
   return (
     <section className="w-[calc(100%-390px)] h-full">
       <div id="map" className="w-full h-full"></div>
