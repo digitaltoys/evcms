@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
 
 import {
@@ -10,18 +10,39 @@ import ChargerList from "./chargerList";
 import { BoltIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const Sidebar = forwardRef((props, mapRef) => {
-  // const [searchPlaceList, setSearchPlaceList] = useState(null);
-
   const [searchPlaceList, setSearchPlaceList] = useAtom(searchPlaceListAtom);
   const selectedMarkerDetail = useAtomValue(selectedMarkerDetailAtom);
+
+  const placeMarkerRef = useRef(null);
 
   const handleSetPlaceList = (list) => {
     setSearchPlaceList(list);
   };
 
   const handlePlaceResultItemClick = (lat, lng) => {
+    const content = `<div class="pin place" id="place-marker"></div>`;
+    const placePosition = new window.kakao.maps.LatLng(lat, lng);
+    const placeMarkerOverlay = new window.kakao.maps.CustomOverlay({
+      position: placePosition,
+      content,
+      zIndex: 10,
+    });
+
     mapRef.current.setLevel(2);
     mapRef.current.setCenter(new window.kakao.maps.LatLng(lat, lng));
+
+    if (placeMarkerRef.current) {
+      placeMarkerRef.current.setMap(null);
+    }
+
+    placeMarkerOverlay.setMap(mapRef.current);
+    placeMarkerRef.current = placeMarkerOverlay;
+
+    const placeMarkerElement = document.querySelector("#place-marker");
+    placeMarkerElement.addEventListener("click", () => {
+      placeMarkerOverlay.setMap(null);
+      placeMarkerRef.current = null;
+    });
   };
 
   return (
