@@ -9,15 +9,23 @@ import {
   SPEED_FILTER_DEFAULT,
   TYPE_FILTER_DEFAULT,
 } from "../constants";
+import { useAtom } from "jotai";
+import {
+  agencyFilterOptionAtom,
+  speedFilterOptionAtom,
+  typeFilterOptionAtom,
+} from "../atoms/atom";
 
 const Filter = () => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [speedFilterOption, setSpeedFilterOption] =
-    useState(SPEED_FILTER_DEFAULT);
-  const [typeFilterOption, setTypeFilterOption] = useState(TYPE_FILTER_DEFAULT);
-  const [agencyFilterOption, setAgencyFilterOption] = useState(
-    AGENCY_FILTER_DEFAULT
+  const [speedFilterOption, setSpeedFilterOption] = useAtom(
+    speedFilterOptionAtom
   );
+  const [typeFilterOption, setTypeFilterOption] = useAtom(typeFilterOptionAtom);
+  const [agencyFilterOption, setAgencyFilterOption] = useAtom(
+    agencyFilterOptionAtom
+  );
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelectAllToggleClick, setIsSelectAllToggleClick] = useState(false);
   const filterRef = useRef(null);
@@ -26,8 +34,6 @@ const Filter = () => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target)) {
-        console.log("handleclickoutside");
-        console.log(filterRef.current.contains(e.target));
         setIsFilterOpen(false);
       }
     };
@@ -55,7 +61,6 @@ const Filter = () => {
 
   // 운영기관 변경시 전체 선택 on off
   useEffect(() => {
-    console.log(agencyFilterOption, isSelectAll);
     const allSelected = Object.values(agencyFilterOption).every(
       (value) => value
     );
