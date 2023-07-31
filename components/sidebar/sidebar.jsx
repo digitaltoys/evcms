@@ -67,28 +67,38 @@ const Sidebar = forwardRef((props, mapRef) => {
                 </button>
               </div>
               <div className="h-[calc(100%-4rem)] overflow-y-scroll no-scrollbar">
-                <ul>
-                  {searchPlaceList
-                    .sort((a, b) => a.distance - b.distance)
-                    .map((item) => (
-                      <li
-                        key={item.id}
-                        className="p-4 border-b-[1px] cursor-pointer hover:bg-green-100"
-                        onClick={() => {
-                          handlePlaceResultItemClick(item.y, item.x);
-                        }}
-                      >
-                        <div className="font-bold">{item.place_name}</div>
-                        <div className="flex items-center">
-                          <span className="text-xs">
-                            {item.road_address_name}
-                          </span>
-                          <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
-                          <span className="text-xs">{item.distance}m</span>
-                        </div>
-                      </li>
-                    ))}
-                </ul>
+                {searchPlaceList.length ? (
+                  <ul>
+                    {searchPlaceList
+                      .sort((a, b) => a.distance - b.distance)
+                      .map((item) => (
+                        <li
+                          key={item.id}
+                          className="p-4 border-b-[1px] cursor-pointer hover:bg-green-100"
+                          onClick={() => {
+                            handlePlaceResultItemClick(item.y, item.x);
+                          }}
+                        >
+                          <div className="font-bold">{item.place_name}</div>
+                          <div className="flex items-center">
+                            <span className="text-xs">
+                              {item.road_address_name}
+                            </span>
+                            <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
+                            <span className="text-xs">{item.distance}m</span>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                ) : (
+                  <div className="flex justify-center items-center w-full h-full">
+                    <p className="text-center">
+                      검색결과가 없습니다.
+                      <br />
+                      검색어를 다시 한번 확인해 주세요.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           ) : selectedMarkerDetail ? (

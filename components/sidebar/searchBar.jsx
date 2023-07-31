@@ -61,7 +61,11 @@ const SearchBar = ({ handleSetPlaceList }) => {
     try {
       // event가 존재할 경우 -> enter로 submit 이벤트 발생했으므로 preventDefault()
       if (e) e.preventDefault();
-      if (searchInputText.trim().length === 0) return;
+      if (searchInputText.trim().length === 0) {
+        alert("검색어를 입력해주세요.");
+        inputRef.current.focus();
+        return;
+      }
       const data = await getSearchResult(searchInputText, currentGps);
 
       handleSetPlaceList(data.documents);
@@ -124,6 +128,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
       throw err;
     }
   };
+
   return (
     <div className="relative w-[390px] h-12">
       <div className="flex w-full h-full px-4 py-2 border-b-[1px]">
@@ -143,48 +148,43 @@ const SearchBar = ({ handleSetPlaceList }) => {
           />
         </form>
         <span className="inline-flex justify-center items-center w-1/12 h-full">
-          <MagnifyingGlassIcon width={24} height={24} />
+          <button onClick={handleFormSubmit}>
+            <MagnifyingGlassIcon width={24} height={24} />
+          </button>
         </span>
       </div>
       {searchAutocompleteList &&
+        searchAutocompleteList.length !== 0 &&
         isSearchInputFocus &&
         !!searchInputText.trim() && (
           <div className="absolute top-12 w-full z-10 py-4 bg-white shadow-md">
             <ul className="flex flex-col gap-2 select-none">
-              {searchAutocompleteList.length ? (
-                searchAutocompleteList
-                  .sort((a, b) => a.distance - b.distance)
-                  .map((item, idx) => (
-                    <li
-                      key={item.id}
-                      className={`${
-                        idx === autocompleteIndex && "bg-gray-200"
-                      } py-2 px-4 cursor-pointer`}
-                      data-index={idx}
-                      data-name={item.place_name}
-                      onMouseEnter={handleMouseenterListItem}
-                      onMouseDown={handleMouseDownListItem}
-                    >
-                      <div>
-                        <SearchHighlightText
-                          text={item.place_name}
-                          searchInputText={highlightText}
-                        />
-                      </div>
-                      <div className="flex items-center">
-                        <span className="text-sm">
-                          {item.road_address_name}
-                        </span>
-                        <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
-                        <span className="text-sm">{item.distance}m</span>
-                      </div>
-                    </li>
-                  ))
-              ) : (
-                <li>
-                  <div className="py-2 px-4">검색 결과가 없습니다.</div>
-                </li>
-              )}
+              {searchAutocompleteList
+                .sort((a, b) => a.distance - b.distance)
+                .map((item, idx) => (
+                  <li
+                    key={item.id}
+                    className={`${
+                      idx === autocompleteIndex && "bg-gray-200"
+                    } py-2 px-4 cursor-pointer`}
+                    data-index={idx}
+                    data-name={item.place_name}
+                    onMouseEnter={handleMouseenterListItem}
+                    onMouseDown={handleMouseDownListItem}
+                  >
+                    <div>
+                      <SearchHighlightText
+                        text={item.place_name}
+                        searchInputText={highlightText}
+                      />
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-sm">{item.road_address_name}</span>
+                      <span className="w-px bg-gray-400 h-4 inline-block mx-2" />
+                      <span className="text-sm">{item.distance}m</span>
+                    </div>
+                  </li>
+                ))}
             </ul>
           </div>
         )}
