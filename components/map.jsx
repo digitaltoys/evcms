@@ -94,22 +94,36 @@ const Map = forwardRef((props, ref) => {
     if (stationList) {
       const filtered = getFilteredStationList(stationList);
       setFilteredStationList(filtered);
-      console.log("마커리스트", markerList);
     }
   }, [stationList]);
 
   // 필터가 변경됐을 때 -> markerList와 stationList에 filter 적용
   useEffect(() => {
-    if (markerList) {
-      // console.log("마커리스트", markerList);
+    if (stationOverlayRef.current) {
+      stationOverlayRef.current.setMap(null);
+      stationOverlayRef.current = null;
     }
+    setSelectedMarker(null);
+    setSelectedMarkerDetail(null);
+
     if (stationList) {
-      const filtered = getFilteredStationList(stationList);
-      setFilteredStationList(filtered);
+      const existFilteredMarker = markerList.filter((item) => {
+        const isFiltered = filterMarker(item);
+        if (isFiltered) return true;
+        else {
+          item.setMap(null);
+          return false;
+        }
+      });
+
+      setMarkerList(existFilteredMarker);
+
+      const filteredStationList = getFilteredStationList(stationList);
+      setFilteredStationList(filteredStationList);
     }
   }, [speedFilterOption, typeFilterOption, agencyFilterOption]);
 
-  // 충전소 data에 따라 마커 생성
+  // 필터링된 충전소 data에 따라 마커 생성
   useEffect(() => {
     if (filteredStationList) {
       // 화면 이동 후에도 영역에 표시되는 마커는 리렌더링 X
@@ -134,7 +148,8 @@ const Map = forwardRef((props, ref) => {
       });
 
       for (let station of additionalStations) {
-        const { lat, lng, statId, statNm, busiId, stat } = station;
+        const { lat, lng, statId, statNm, busiId, busiNm, stat, chgerType } =
+          station;
         const markerImage = makeLogoMarker(busiId, stat, 48, 48);
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
         const logoMarker = new window.kakao.maps.Marker({
@@ -146,6 +161,8 @@ const Map = forwardRef((props, ref) => {
         logoMarker.id = statId;
         logoMarker.stat = stat;
         logoMarker.busiId = busiId;
+        logoMarker.chgerType = chgerType;
+        logoMarker.busiNm = busiNm;
 
         window.kakao.maps.event.addListener(logoMarker, "click", () =>
           handleLogoMarkerClick(logoMarker)
@@ -250,6 +267,20 @@ const Map = forwardRef((props, ref) => {
     });
 
     return filtered;
+  };
+
+  // 마커 필터링 검증
+  const filterMarker = (marker) => {
+    const { chgerType, busiNm } = marker;
+    if (!agencyFilterOption[busiNm]) {
+      return false;
+    }
+
+    if (!CHARGER_TYPE[chgerType].some((item) => typeFilterOption[item])) {
+      return false;
+    }
+
+    return true;
   };
 
   // 마커 클릭 오버레이 생성
