@@ -52,6 +52,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
   }, [isSearchInputFocus]);
 
   // handler
+  // 검색창 focus시 상태 변경
   const handleFocusInput = (e) => {
     setIsSearchInputFocus(e.type === "focus");
   };
@@ -62,7 +63,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
       if (e) e.preventDefault();
       if (searchInputText.trim().length === 0) return;
       const data = await getSearchResult(searchInputText, currentGps);
-      console.log(data);
+
       handleSetPlaceList(data.documents);
       setIsSearchInputFocus(false);
     } catch (err) {
@@ -77,6 +78,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
     setAutocompleteIndex(-1);
   };
 
+  // 키보드 화살표키 조작
   const handleInputKeydown = (e) => {
     if (searchAutocompleteList && searchAutocompleteList.length) {
       const lastIndex = searchAutocompleteList.length - 1;
@@ -101,6 +103,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
     }
   };
 
+  // 장소 검색 결과에 마우스 움직일경우
   const handleMouseenterListItem = (e) => {
     setAutocompleteIndex(Number(e.currentTarget.dataset.index));
   };

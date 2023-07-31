@@ -1,23 +1,34 @@
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { MapPinIcon } from "@heroicons/react/24/outline";
 
 import "../styles/components/map.css";
-import { MapPinIcon } from "@heroicons/react/24/outline";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import {
+  agencyFilterOptionAtom,
   currentGpsAtom,
   searchPlaceListAtom,
   selectedMarkerDetailAtom,
+  speedFilterOptionAtom,
+  typeFilterOptionAtom,
 } from "../atoms/atom";
 import Filter from "./filter";
-import { CHARGER_LOGO_STAT_CONVERTER, EXIST_CHARGER_LOGO } from "../constants";
+import {
+  CHARGER_LOGO_STAT_CONVERTER,
+  CHARGER_TYPE,
+  EXIST_CHARGER_LOGO,
+} from "../constants";
 
 const Map = forwardRef((props, ref) => {
   const [currentGps, setCurrentGps] = useAtom(currentGpsAtom);
   const setSelectedMarkerDetail = useSetAtom(selectedMarkerDetailAtom);
   const setSearchPlaceList = useSetAtom(searchPlaceListAtom);
+  const speedFilterOption = useAtomValue(speedFilterOptionAtom);
+  const typeFilterOption = useAtomValue(typeFilterOptionAtom);
+  const agencyFilterOption = useAtomValue(agencyFilterOptionAtom);
 
   const [stationList, setStationList] = useState(null);
+  const [filteredStationList, setFilteredStationList] = useState(null);
   const [markerList, setMarkerList] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
 
@@ -78,9 +89,43 @@ const Map = forwardRef((props, ref) => {
     return () => script.removeEventListener("load", onLoadKakaoMap);
   }, []);
 
-  // 충전소 data에 따라 마커 생성
+  // 충전소 data 필터링
   useEffect(() => {
     if (stationList) {
+      const filtered = getFilteredStationList(stationList);
+      setFilteredStationList(filtered);
+    }
+  }, [stationList]);
+
+  // 필터가 변경됐을 때 -> markerList와 stationList에 filter 적용
+  useEffect(() => {
+    if (stationOverlayRef.current) {
+      stationOverlayRef.current.setMap(null);
+      stationOverlayRef.current = null;
+    }
+    setSelectedMarker(null);
+    setSelectedMarkerDetail(null);
+
+    if (stationList) {
+      const existFilteredMarker = markerList.filter((item) => {
+        const isFiltered = filterMarker(item);
+        if (isFiltered) return true;
+        else {
+          item.setMap(null);
+          return false;
+        }
+      });
+
+      setMarkerList(existFilteredMarker);
+
+      const filteredStationList = getFilteredStationList(stationList);
+      setFilteredStationList(filteredStationList);
+    }
+  }, [speedFilterOption, typeFilterOption, agencyFilterOption]);
+
+  // 필터링된 충전소 data에 따라 마커 생성
+  useEffect(() => {
+    if (filteredStationList) {
       // 화면 이동 후에도 영역에 표시되는 마커는 리렌더링 X
       let inBoundsMarker = markerList.filter((mk) => {
         const pos = mk.getPosition();
@@ -94,7 +139,7 @@ const Map = forwardRef((props, ref) => {
         return true;
       });
 
-      let additionalStations = stationList.filter((st) => {
+      let additionalStations = filteredStationList.filter((st) => {
         if (inBoundsMarker.find((mk) => mk.id === st.statId)) {
           return false;
         } else {
@@ -103,7 +148,8 @@ const Map = forwardRef((props, ref) => {
       });
 
       for (let station of additionalStations) {
-        const { lat, lng, statId, statNm, busiId, stat } = station;
+        const { lat, lng, statId, statNm, busiId, busiNm, stat, chgerType } =
+          station;
         const markerImage = makeLogoMarker(busiId, stat, 48, 48);
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
         const logoMarker = new window.kakao.maps.Marker({
@@ -115,6 +161,8 @@ const Map = forwardRef((props, ref) => {
         logoMarker.id = statId;
         logoMarker.stat = stat;
         logoMarker.busiId = busiId;
+        logoMarker.chgerType = chgerType;
+        logoMarker.busiNm = busiNm;
 
         window.kakao.maps.event.addListener(logoMarker, "click", () =>
           handleLogoMarkerClick(logoMarker)
@@ -125,7 +173,7 @@ const Map = forwardRef((props, ref) => {
 
       setMarkerList(inBoundsMarker);
     }
-  }, [stationList]);
+  }, [filteredStationList]);
 
   /*
   selectedMarker 변경시 
@@ -206,6 +254,33 @@ const Map = forwardRef((props, ref) => {
     } catch (err) {
       throw err;
     }
+  };
+
+  const getFilteredStationList = (list) => {
+    const filtered = list.filter((item) => {
+      const { busiNm, chgerType } = item;
+      if (!agencyFilterOption[busiNm]) return false;
+      if (!CHARGER_TYPE[chgerType].some((item) => typeFilterOption[item]))
+        return false;
+
+      return true;
+    });
+
+    return filtered;
+  };
+
+  // 마커 필터링 검증
+  const filterMarker = (marker) => {
+    const { chgerType, busiNm } = marker;
+    if (!agencyFilterOption[busiNm]) {
+      return false;
+    }
+
+    if (!CHARGER_TYPE[chgerType].some((item) => typeFilterOption[item])) {
+      return false;
+    }
+
+    return true;
   };
 
   // 마커 클릭 오버레이 생성
