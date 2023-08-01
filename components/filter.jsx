@@ -7,6 +7,7 @@ import {
   CHARGING_TYPE,
   OPERATING_AGENCY,
   SPEED_FILTER_DEFAULT,
+  SPEED_TYPE_MATCHING,
   TYPE_FILTER_DEFAULT,
 } from "../constants";
 import { useAtom } from "jotai";
@@ -69,6 +70,28 @@ const Filter = () => {
       setIsSelectAll(allSelected);
     }
   }, [agencyFilterOption]);
+
+  // 충전속도 변경시 충전타입 변경
+  // 1. 급속 선택 상태에서 완속 선택 해제 시 AC3상 선택 유지
+  // 2-1. 초급속 선택 상태에서 급속 선택 해제 시 DC콤보, 슈퍼차저 선택 유지
+  // 2-2. 완속 선택 상태에서 급속 선택 해제 시 AC3상 선택 유지
+  // 3. 급속 선택 상태에서 초급속 선택 해제 시 DC콤보, 슈퍼차저 선택값 처리 유지.
+  useEffect(() => {
+    const newTypeOption = typeFilterOption;
+    const filterTrueKey = Object.keys(speedFilterOption).filter(
+      (key) => speedFilterOption[key]
+    );
+
+    Object.keys(newTypeOption).forEach((key) => (newTypeOption[key] = false));
+
+    filterTrueKey.forEach((key) => {
+      SPEED_TYPE_MATCHING[key].forEach((type) => {
+        newTypeOption[type] = true;
+      });
+    });
+
+    setTypeFilterOption(newTypeOption);
+  }, [speedFilterOption]);
 
   // 필터 옵션 핸들러
   const handleClickFilterDefault = () => {

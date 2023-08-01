@@ -268,6 +268,12 @@ export const OPERATING_AGENCY = [
   "휴맥스이브이",
 ];
 
+export const SPEED_TYPE_MATCHING = {
+  완속: ["AC3상", "AC완속"],
+  급속: ["DC콤보", "DC차데모"],
+  초급속: ["DC콤보"],
+};
+
 export const SPEED_FILTER_DEFAULT = {
   완속: true,
   급속: true,

@@ -89,7 +89,7 @@ const Map = forwardRef((props, ref) => {
     return () => script.removeEventListener("load", onLoadKakaoMap);
   }, []);
 
-  // 충전소 data 필터링
+  // 충전소 data fetch 이후 필터링
   useEffect(() => {
     if (stationList) {
       const filtered = getFilteredStationList(stationList);
@@ -97,7 +97,7 @@ const Map = forwardRef((props, ref) => {
     }
   }, [stationList]);
 
-  // 필터가 변경됐을 때 -> markerList와 stationList에 filter 적용
+  // 필터 옵션이 변경됐을 때 -> markerList와 stationList에 filter 적용
   useEffect(() => {
     if (stationOverlayRef.current) {
       stationOverlayRef.current.setMap(null);
@@ -126,7 +126,8 @@ const Map = forwardRef((props, ref) => {
   // 필터링된 충전소 data에 따라 마커 생성
   useEffect(() => {
     if (filteredStationList) {
-      // 화면 이동 후에도 영역에 표시되는 마커는 리렌더링 X
+      // 화면 이동 후에도 영역에 표시되는 marker는 리렌더링 X
+      // 현재 화면영역 안 marker 목록
       let inBoundsMarker = markerList.filter((mk) => {
         const pos = mk.getPosition();
         const bounds = mapRef.current.getBounds();
@@ -139,6 +140,7 @@ const Map = forwardRef((props, ref) => {
         return true;
       });
 
+      // fetching 및 filtering한 데이터에서 추가로 marker 렌더링 해줘야할 충전소 목록
       let additionalStations = filteredStationList.filter((st) => {
         if (inBoundsMarker.find((mk) => mk.id === st.statId)) {
           return false;
