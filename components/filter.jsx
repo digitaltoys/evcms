@@ -29,6 +29,7 @@ const Filter = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelectAllToggleClick, setIsSelectAllToggleClick] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(null);
   const filterRef = useRef(null);
 
   // 필터창 바깥 클릭 시 필터 닫힘
@@ -77,21 +78,39 @@ const Filter = () => {
   // 2-2. 완속 선택 상태에서 급속 선택 해제 시 AC3상 선택 유지
   // 3. 급속 선택 상태에서 초급속 선택 해제 시 DC콤보, 슈퍼차저 선택값 처리 유지.
   useEffect(() => {
-    const newTypeOption = typeFilterOption;
-    const filterTrueKey = Object.keys(speedFilterOption).filter(
-      (key) => speedFilterOption[key]
-    );
+    if (selectedFilter === "speed") {
+      const newTypeOption = typeFilterOption;
+      const filterTrueKey = Object.keys(speedFilterOption).filter(
+        (key) => speedFilterOption[key]
+      );
 
-    Object.keys(newTypeOption).forEach((key) => (newTypeOption[key] = false));
+      Object.keys(newTypeOption).forEach((key) => (newTypeOption[key] = false));
 
-    filterTrueKey.forEach((key) => {
-      SPEED_TYPE_MATCHING[key].forEach((type) => {
-        newTypeOption[type] = true;
+      filterTrueKey.forEach((key) => {
+        SPEED_TYPE_MATCHING[key].forEach((type) => {
+          newTypeOption[type] = true;
+        });
       });
-    });
 
-    setTypeFilterOption(newTypeOption);
+      setTypeFilterOption(newTypeOption);
+    }
   }, [speedFilterOption]);
+
+  // 타입 변경시 해당하는 속도 필터가 없다면 속도 필터 해제
+  useEffect(() => {
+    if (selectedFilter === "type") {
+      const speedFilterKey = Object.keys(speedFilterOption);
+      const newSpeedOption = Object.assign({}, speedFilterOption);
+      speedFilterKey.forEach((key) => {
+        const result = SPEED_TYPE_MATCHING[key].every(
+          (item) => typeFilterOption[item]
+        );
+        newSpeedOption[key] = result;
+      });
+
+      setSpeedFilterOption(newSpeedOption);
+    }
+  }, [typeFilterOption]);
 
   // 필터 옵션 핸들러
   const handleClickFilterDefault = () => {
@@ -107,16 +126,19 @@ const Filter = () => {
   const handleSpeedFilterChange = (e) => {
     const { name, checked } = e.target;
     setSpeedFilterOption((prev) => ({ ...prev, [name]: checked }));
+    setSelectedFilter("speed");
   };
 
   const handleTypeFilterChange = (e) => {
     const { name, checked } = e.target;
     setTypeFilterOption((prev) => ({ ...prev, [name]: checked }));
+    setSelectedFilter("type");
   };
 
   const handleAgencyFilterChange = (e) => {
     const { name, checked } = e.target;
     setAgencyFilterOption((prev) => ({ ...prev, [name]: checked }));
+    setSelectedFilter("agency");
   };
 
   const handleToggleSwitch = () => {

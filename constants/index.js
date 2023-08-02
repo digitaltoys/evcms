@@ -270,7 +270,7 @@ export const OPERATING_AGENCY = [
 
 export const SPEED_TYPE_MATCHING = {
   완속: ["AC3상", "AC완속"],
-  급속: ["DC콤보", "DC차데모"],
+  급속: ["AC3상", "DC콤보", "DC차데모"],
   초급속: ["DC콤보"],
 };
 
@@ -295,10 +295,10 @@ export const AGENCY_FILTER_DEFAULT = {
   SK에너지: false,
   evmost: false,
   광주시: false,
-  광주시: false,
+  // 광주시: false,
   군포시: false,
   기아자동차: false,
-  기아자동차: false,
+  // 기아자동차: false,
   나주시: false,
   남부솔루션: false,
   대구시: false,
