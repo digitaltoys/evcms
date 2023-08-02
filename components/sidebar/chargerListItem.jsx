@@ -19,7 +19,7 @@ const STAT_COLOR = {
 const ChargerListItem = ({ charger }) => {
   const { stat, chgerType, output } = charger;
   return (
-    <li className="flex w-full h-20 mb-3 rounded-2xl bg-white select-none border-[1px]">
+    <li className="flex w-full h-20 mb-4 rounded-2xl bg-white select-none border-[1px]">
       <div
         className={`flex flex-col grow justify-center items-center font-bold ${STAT_COLOR[stat]}`}
       >
