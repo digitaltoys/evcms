@@ -7,6 +7,7 @@ import {
   getSearchResult,
 } from "../../apis/kakaoRestApi";
 import { currentGpsAtom } from "../../atoms/atom";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const SearchBar = ({ handleSetPlaceList }) => {
   const currentGps = useAtomValue(currentGpsAtom);
@@ -18,19 +19,21 @@ const SearchBar = ({ handleSetPlaceList }) => {
   const [highlightText, setHighlightText] = useState("");
   const [autocompleteIndex, setAutocompleteIndex] = useState(-1);
 
+  const debouncedSearchInputText = useDebounce(searchInputText, 300);
+
   const inputRef = useRef(null);
 
   // inputText를 입력했을 때만 자동완성 fetch. 마우스나 키보드로 자동완성 이동으로 생기는 inputText 변경시엔 fetch 안함.
   useEffect(() => {
-    if (!searchInputText.trim()) {
+    if (!debouncedSearchInputText.trim()) {
       setSearchAutocompleteList(null);
       return;
     }
 
     if (isInputTyping) {
-      fetchSearchAutocomplete(searchInputText, currentGps);
+      fetchSearchAutocomplete(debouncedSearchInputText, currentGps);
     }
-  }, [searchInputText]);
+  }, [debouncedSearchInputText]);
 
   // input 바깥 클릭시 focus blur
   useEffect(() => {
@@ -156,7 +159,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
       {searchAutocompleteList &&
         searchAutocompleteList.length !== 0 &&
         isSearchInputFocus &&
-        !!searchInputText.trim() && (
+        !!debouncedSearchInputText.trim() && (
           <div className="absolute top-12 w-full z-10 py-4 bg-white shadow-md">
             <ul className="flex flex-col gap-2 select-none">
               {searchAutocompleteList
