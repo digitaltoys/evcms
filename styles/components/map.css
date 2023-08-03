@@ -75,8 +75,9 @@
 .pin {
   width: 30px;
   height: 30px;
+  border: 4px solid white;
   border-radius: 50% 50% 50% 0;
-  background: rgb(74, 222, 128);
+  background: red;
   position: absolute;
   transform: rotate(-45deg);
   left: 50%;
@@ -85,13 +86,13 @@
 }
 
 .pin.place {
-  background: red;
+  background: rgb(74, 222, 128);
 }
 .pin:after {
   content: "";
   width: 14px;
   height: 14px;
-  margin: 8px 0 0 8px;
+  margin: 4px 0 0 4px;
   background: white;
   position: absolute;
   border-radius: 50%;

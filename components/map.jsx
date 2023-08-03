@@ -208,16 +208,6 @@ const Map = forwardRef((props, ref) => {
       selectedMarker.setZIndex(5);
       bigLogoMarkerRef.current = selectedMarker;
 
-      const fetchStationDetail = async (id) => {
-        try {
-          const data = await getStationDetail(id);
-          makeOverlay(data);
-          setSelectedMarkerDetail(data);
-        } catch (err) {
-          throw err;
-        }
-      };
-
       fetchStationDetail(id);
     }
   }, [selectedMarker]);
@@ -258,6 +248,18 @@ const Map = forwardRef((props, ref) => {
     }
   };
 
+  // 충전소 상세 정보 받아오기
+  const fetchStationDetail = async (id) => {
+    try {
+      const data = await getStationDetail(id);
+      makeOverlay(data);
+      setSelectedMarkerDetail(data);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  // 충전소 목록 필터링하여 반환
   const getFilteredStationList = (list) => {
     const filtered = list.filter((item) => {
       const { busiNm, chgerType } = item;
@@ -287,18 +289,8 @@ const Map = forwardRef((props, ref) => {
 
   // 마커 클릭 오버레이 생성
   const makeOverlay = (detail) => {
-    const {
-      addr,
-      location,
-      busiCall,
-      useTime,
-      busiNm,
-      statId,
-      statNm,
-      lat,
-      lng,
-      Chargers,
-    } = detail;
+    const { addr, useTime, busiNm, statId, statNm, lat, lng, Chargers } =
+      detail;
 
     const overlayContent = `
     <div class="overlay__container">
