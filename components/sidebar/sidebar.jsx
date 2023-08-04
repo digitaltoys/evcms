@@ -57,7 +57,10 @@ const Sidebar = forwardRef((props, mapRef) => {
             <div className="flex flex-col h-full">
               <div className="flex h-16 justify-between items-center p-4 shadow">
                 <h2 className="text-lg font-bold">검색 결과</h2>
-                <button onClick={() => setSearchPlaceList(null)}>
+                <button
+                  onClick={() => setSearchPlaceList(null)}
+                  aria-label="search-close"
+                >
                   <span>
                     <XMarkIcon
                       width={24}

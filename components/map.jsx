@@ -296,7 +296,7 @@ const Map = forwardRef((props, ref) => {
     <div class="overlay__container">
       <div class="title__wrapper">
         <h1 class="overlay-title">${statNm}</h1>
-        <button id="overlay-close">
+        <button id="overlay-close" aria-label="overlay-close">
           <svg width="24px" height="24px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
@@ -418,6 +418,7 @@ const Map = forwardRef((props, ref) => {
         <button
           className="w-10 h-10 flex justify-center items-center rounded-lg shadow-md bg-white hover:text-green-600 transition-all ease-linear duration-100"
           onClick={handleClickMyLocation}
+          aria-label="my-location"
         >
           <span>
             <MapPinIcon width={24} height={24} />

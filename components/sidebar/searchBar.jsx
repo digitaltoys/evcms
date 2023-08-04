@@ -151,7 +151,7 @@ const SearchBar = ({ handleSetPlaceList }) => {
           />
         </form>
         <span className="inline-flex justify-center items-center w-1/12 h-full">
-          <button onClick={handleFormSubmit}>
+          <button onClick={handleFormSubmit} aria-label="search-button">
             <MagnifyingGlassIcon width={24} height={24} />
           </button>
         </span>

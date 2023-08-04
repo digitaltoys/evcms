@@ -162,6 +162,7 @@ const Filter = () => {
             <button
               className="absolute top-5 right-0"
               onClick={handleClickFilterDefault}
+              aria-label="filter-reset"
             >
               초기화
             </button>
@@ -262,6 +263,7 @@ const Filter = () => {
         <button
           className="w-10 h-10 flex justify-center items-center rounded-lg shadow-md bg-white hover:text-green-600 transition-all ease-linear duration-100"
           onClick={handleClickFilterButton}
+          aria-label="filter-open"
         >
           <span>
             <AdjustmentsVerticalIcon width={24} height={24} />
