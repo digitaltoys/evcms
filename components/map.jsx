@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 
-import "../styles/components/map.css";
+// import "../styles/components/map.css";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import {
   agencyFilterOptionAtom,
