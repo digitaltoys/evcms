@@ -2,7 +2,6 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 
-// import "../styles/components/map.css";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import {
   agencyFilterOptionAtom,
@@ -18,6 +17,7 @@ import {
   CHARGER_TYPE,
   EXIST_CHARGER_LOGO,
 } from "../constants";
+import { getOcubeBoundStationList } from "../apis/ocubeApi";
 
 const Map = forwardRef((props, ref) => {
   const [currentGps, setCurrentGps] = useAtom(currentGpsAtom);
@@ -81,6 +81,31 @@ const Map = forwardRef((props, ref) => {
         window.kakao.maps.event.addListener(newMap, "idle", function () {
           fetchStationList(mapRef.current);
         });
+
+        // OCUBE API TEST
+        const ocubeFetchStationList = async (map) => {
+          try {
+            const {
+              ha: lngSW,
+              qa: latSW,
+              oa: lngNE,
+              pa: latNE,
+            } = map.getBounds();
+            const params = {
+              s: String(latSW),
+              w: String(lngSW),
+              n: String(latNE),
+              e: String(lngNE),
+            };
+
+            const data = await getOcubeBoundStationList(params);
+            console.log(data);
+          } catch (err) {
+            throw err;
+          }
+        };
+
+        ocubeFetchStationList(mapRef.current);
       });
     };
 

@@ -1,7 +1,11 @@
 import axios from "axios";
 
-const EV_API_SERVER = "/api/";
+const EV_API_SERVER = "/api";
 const KAKAO_REST_API_SERVER = "https://dapi.kakao.com/v2/local/search";
+
+export const ocubeApiInstance = axios.create({
+  baseURL: "/app",
+});
 
 export const evApiInstance = axios.create({
   baseURL: EV_API_SERVER,
