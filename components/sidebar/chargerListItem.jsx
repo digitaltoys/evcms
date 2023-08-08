@@ -23,7 +23,7 @@ const ChargerListItem = ({ charger }) => {
   const statText = CHARGER_STAT[charger.stat];
   const outputText = charger.output;
   const dateText = getDateText(charger);
-  const chgerType = charger.chgerType;
+  const chgerType = CHARGER_TYPE[charger.chgerType];
 
   function convertToTimestamp(time) {
     const year = parseInt(time.substring(0, 4));
@@ -133,7 +133,7 @@ const ChargerListItem = ({ charger }) => {
         </span>
         {dateText && <span className="text-xs text-gray-400">{dateText}</span>}
       </div>
-      <div className="flex flex-col max-w-[56px] grow justify-center items-center">
+      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
         <AC3
           fill={chgerType.includes("AC3상") ? "black" : "gainsboro"}
           width={32}
@@ -147,7 +147,7 @@ const ChargerListItem = ({ charger }) => {
           AC3상
         </span>
       </div>
-      <div className="flex flex-col max-w-[56px] grow justify-center items-center">
+      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
         <ACStandardCharge
           fill={chgerType.includes("AC완속") ? "black" : "gainsboro"}
           width={32}
@@ -161,7 +161,7 @@ const ChargerListItem = ({ charger }) => {
           AC완속
         </span>
       </div>
-      <div className="flex flex-col max-w-[56px] grow justify-center items-center">
+      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
         <DCChademo
           fill={chgerType.includes("DC차데모") ? "black" : "gainsboro"}
           width={32}
@@ -175,7 +175,7 @@ const ChargerListItem = ({ charger }) => {
           DC차데모
         </span>
       </div>
-      <div className="flex flex-col max-w-[56px] grow justify-center items-center">
+      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
         <DCCombo
           fill={chgerType.includes("DC콤보") ? "black" : "gainsboro"}
           width={32}
