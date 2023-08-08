@@ -20,7 +20,6 @@ const ChargerList = () => {
     busiCall,
     note,
   } = selectedMarkerDetail;
-  console.log(selectedMarkerDetail);
 
   return (
     <div className="flex flex-col w-full h-full p-4">
