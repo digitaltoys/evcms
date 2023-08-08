@@ -91,7 +91,7 @@ const ChargerListItem = ({ charger }) => {
     const { years, months, days, hours, minutes, seconds } = date;
 
     if (years) return `${years}년`;
-    if (months) return `${months}월`;
+    if (months) return `${months}개월`;
     if (days) return `${days}일`;
     if (hours) return `${hours}시`;
     if (minutes) return `${minutes}분`;
