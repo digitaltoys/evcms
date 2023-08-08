@@ -30,45 +30,45 @@ const ChargerList = () => {
         <div className="p-4">
           <p className="flex items-center mb-2">
             <span className="basis-16 shrink-0 text-center">주소</span>
-            <div className="h-6 mx-2 border-l border-gray-200" />
+            <span className="h-6 mx-2 border-l border-gray-200" />
             <span>{addr}</span>
           </p>
           <p className="flex items-center mb-2">
             <span className="basis-16 shrink-0 text-center">상세위치</span>
-            <div className="h-6 mx-2 border-l border-gray-200" />
+            <span className="h-6 mx-2 border-l border-gray-200" />
             <span>{location ? location : "상세위치가 없습니다"}</span>
           </p>
           <p className="flex items-center mb-2">
             <span className="basis-16 shrink-0 text-center">제한여부</span>
-            <div className="h-6 mx-2 border-l border-gray-200" />
+            <span className="h-6 mx-2 border-l border-gray-200" />
             <span>{limitYn === "Y" ? "이용자 제한" : "제한 없음"}</span>
           </p>
           {limitDetail && (
             <p className="flex items-center mb-2">
               <span className="basis-16 shrink-0 text-center">제한사유</span>
-              <div className="h-6 mx-2 border-l border-gray-200" />
+              <span className="h-6 mx-2 border-l border-gray-200" />
               <span>{limitDetail}</span>
             </p>
           )}
           <p className="flex items-center mb-2">
             <span className="basis-16 shrink-0 text-center">운영시간</span>
-            <div className="h-6 mx-2 border-l border-gray-200" />
+            <span className="h-6 mx-2 border-l border-gray-200" />
             <span>{useTime}</span>
           </p>
           <p className="flex items-center mb-2 last:mb-0">
             <span className="basis-16 shrink-0 text-center">운영기관</span>
-            <div className="h-6 mx-2 border-l border-gray-200" />
+            <span className="h-6 mx-2 border-l border-gray-200" />
             <span>{BUS_ID[busiId]}</span>
           </p>
           <p className="flex items-center mb-2 last:mb-0">
             <span className="basis-16 shrink-0 text-center">전화번호</span>
-            <div className="h-6 mx-2 border-l border-gray-200" />
+            <span className="h-6 mx-2 border-l border-gray-200" />
             <span>{busiCall}</span>
           </p>
           {note && (
             <p className="flex items-center mb-2">
               <span className="basis-16 shrink-0 text-center">특이사항</span>
-              <div className="h-6 mx-2 border-l border-gray-200" />
+              <span className="h-6 mx-2 border-l border-gray-200" />
               <span>{note}</span>
             </p>
           )}
