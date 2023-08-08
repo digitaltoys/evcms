@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 
+import Filter from "./filter";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import {
   agencyFilterOptionAtom,
@@ -11,7 +12,6 @@ import {
   speedFilterOptionAtom,
   typeFilterOptionAtom,
 } from "../atoms/atom";
-import Filter from "./filter";
 import {
   CHARGER_LOGO_STAT_CONVERTER,
   CHARGER_TYPE,
@@ -64,6 +64,9 @@ const Map = forwardRef((props, ref) => {
         mapRef.current = newMap;
         ref.current = newMap;
 
+        // 지도 축소 레벨 설정
+        mapRef.current.setMaxLevel(11);
+
         // 사용자 gps 위치에 marker (오버레이) 생성
         const content = `<div class="pin"></div><div class="pulse"></div>`;
         const userPosition = new window.kakao.maps.LatLng(lat, lng);
@@ -105,7 +108,7 @@ const Map = forwardRef((props, ref) => {
           }
         };
 
-        ocubeFetchStationList(mapRef.current);
+        // ocubeFetchStationList(mapRef.current);
       });
     };
 
