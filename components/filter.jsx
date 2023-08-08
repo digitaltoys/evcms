@@ -16,6 +16,7 @@ import {
   speedFilterOptionAtom,
   typeFilterOptionAtom,
 } from "../atoms/atom";
+import SimpleBar from "simplebar-react";
 
 const Filter = () => {
   const [speedFilterOption, setSpeedFilterOption] = useAtom(
@@ -149,8 +150,8 @@ const Filter = () => {
   return (
     <div
       className={`inline-block absolute top-4 right-4 z-10 ${
-        isFilterOpen ? "w-[32rem]" : "w-10 h-10"
-      } rounded-lg bg-white shadow-lg transition-all ease-in-out duration-300`}
+        isFilterOpen ? "w-[32rem] h-[48rem]" : "w-10 h-10"
+      } rounded-lg bg-white shadow-lg transition-all ease-in-out duration-300 overflow-hidden`}
     >
       {isFilterOpen ? (
         <div
@@ -213,7 +214,7 @@ const Filter = () => {
               ))}
             </div>
           </div>
-          <div className="relative py-4 overflow-hidden">
+          <div className="flex flex-col flex-1 relative py-4 overflow-hidden">
             <h3 className="text-xl font-bold mb-2">운영기관</h3>
             <div className="flex justify-center items-center absolute top-4 right-0">
               <span className="mr-2 font-bold">전체</span>
@@ -237,26 +238,32 @@ const Filter = () => {
                 />
               </label>
             </div>
-            <div className="flex flex-wrap py-2 gap-2 h-96 overflow-y-scroll no-scrollbar">
-              {OPERATING_AGENCY.map((agency) => (
-                <label
-                  key={agency}
-                  className={`border-[1px] py-1 px-3 rounded-2xl cursor-pointer transition-all ease-in-out duration-150 ${
-                    agencyFilterOption[agency] &&
-                    "bg-green-50 border-solid border-1 border-green-600 text-green-600"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    name={agency}
-                    className="appearance-none"
-                    checked={agencyFilterOption[agency]}
-                    onChange={handleAgencyFilterChange}
-                  />
-                  <span>{agency}</span>
-                </label>
-              ))}
+            {/* <div className="flex flex-wrap py-2 gap-2 h-96 overflow-y-scroll no-scrollbar"> */}
+            <div className="flex-1 overflow-auto">
+              <SimpleBar className="h-full">
+                <div className="flex flex-wrap py-2 gap-2 h-96">
+                  {OPERATING_AGENCY.map((agency) => (
+                    <label
+                      key={agency}
+                      className={`border-[1px] py-1 px-3 rounded-2xl cursor-pointer transition-all ease-in-out duration-150 ${
+                        agencyFilterOption[agency] &&
+                        "bg-green-50 border-solid border-1 border-green-600 text-green-600"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        name={agency}
+                        className="appearance-none"
+                        checked={agencyFilterOption[agency]}
+                        onChange={handleAgencyFilterChange}
+                      />
+                      <span>{agency}</span>
+                    </label>
+                  ))}
+                </div>
+              </SimpleBar>
             </div>
+            {/* </div> */}
           </div>
         </div>
       ) : (
