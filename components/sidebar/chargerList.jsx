@@ -1,7 +1,6 @@
 import React from "react";
 import { useAtomValue } from "jotai";
 import SimpleBar from "simplebar-react";
-import "simplebar-react/dist/simplebar.min.css";
 
 import ChargerListItem from "./chargerListItem";
 import { selectedMarkerDetailAtom } from "../../atoms/atom";

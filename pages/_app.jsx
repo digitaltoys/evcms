@@ -1,7 +1,9 @@
-import Layout from "../components/common/layout";
+import Head from "next/head";
+
 import "../styles/globals.css";
 import "../styles/components/map.css";
-import Head from "next/head";
+import "simplebar-react/dist/simplebar.min.css";
+import Layout from "../components/common/layout";
 
 export default function MyApp({ Component, pageProps }) {
   return (
