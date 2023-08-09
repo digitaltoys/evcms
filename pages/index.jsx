@@ -2,6 +2,7 @@ import { useRef } from "react";
 
 import Map from "../components/map";
 import { Sidebar } from "../components/sidebar";
+import Layout from "../components/layouts/layout";
 
 export default function Home() {
   const mapRef = useRef(null);
@@ -13,3 +14,7 @@ export default function Home() {
     </div>
   );
 }
+
+Home.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
+};
