@@ -121,73 +121,73 @@ const ChargerListItem = ({ charger }) => {
   }
 
   return (
-    <li className="flex w-full h-20 mb-4 rounded-2xl select-none border-[1px] last:mb-0">
+    <li className="flex justify-between w-full h-20 px-2 mb-4 rounded-2xl select-none border-[1px] last:mb-0">
       <div
         className={`flex flex-col grow justify-center items-center font-bold text-sm ${statColor}`}
       >
-        {/* <span>{CHARGER_STAT[stat]}</span>
-        {output && <span className="text-sm">{output} kW</span>} */}
         <span>
           <span>{statText} </span>
           {outputText && <span>({outputText}kW)</span>}
         </span>
         {dateText && <span className="text-xs text-gray-400">{dateText}</span>}
       </div>
-      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
-        <AC3
-          fill={chgerType.includes("AC3상") ? "black" : "gainsboro"}
-          width={32}
-          height={32}
-        />
-        <span
-          className={`text-[8px] font-bold ${
-            chgerType.includes("AC3상") ? "text-black" : "text-gray-300"
-          }`}
-        >
-          AC3상
-        </span>
-      </div>
-      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
-        <ACStandardCharge
-          fill={chgerType.includes("AC완속") ? "black" : "gainsboro"}
-          width={32}
-          height={32}
-        />
-        <span
-          className={`text-[8px] font-bold ${
-            chgerType.includes("AC완속") ? "text-black" : "text-gray-300"
-          }`}
-        >
-          AC완속
-        </span>
-      </div>
-      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
-        <DCChademo
-          fill={chgerType.includes("DC차데모") ? "black" : "gainsboro"}
-          width={32}
-          height={32}
-        />
-        <span
-          className={`text-[8px] font-bold ${
-            chgerType.includes("DC차데모") ? "text-black" : "text-gray-300"
-          }`}
-        >
-          DC차데모
-        </span>
-      </div>
-      <div className="flex flex-col max-w-[48px] grow justify-center items-center">
-        <DCCombo
-          fill={chgerType.includes("DC콤보") ? "black" : "gainsboro"}
-          width={32}
-          height={32}
-        />
-        <span
-          className={`text-[8px] font-bold ${
-            chgerType.includes("DC콤보") ? "text-black" : "text-gray-300"
-          }`}
-        >
-          DC콤보
-        </span>
+      <div className="flex">
+        <div className="flex flex-col w-[48px] grow justify-center items-center">
+          <AC3
+            fill={chgerType.includes("AC3상") ? "black" : "gainsboro"}
+            width={32}
+            height={32}
+          />
+          <span
+            className={`text-[8px] font-bold ${
+              chgerType.includes("AC3상") ? "text-black" : "text-gray-300"
+            }`}
+          >
+            AC3상
+          </span>
+        </div>
+        <div className="flex flex-col w-[48px] grow justify-center items-center">
+          <ACStandardCharge
+            fill={chgerType.includes("AC완속") ? "black" : "gainsboro"}
+            width={32}
+            height={32}
+          />
+          <span
+            className={`text-[8px] font-bold ${
+              chgerType.includes("AC완속") ? "text-black" : "text-gray-300"
+            }`}
+          >
+            AC완속
+          </span>
+        </div>
+        <div className="flex flex-col w-[48px] grow justify-center items-center">
+          <DCChademo
+            fill={chgerType.includes("DC차데모") ? "black" : "gainsboro"}
+            width={32}
+            height={32}
+          />
+          <span
+            className={`text-[8px] font-bold ${
+              chgerType.includes("DC차데모") ? "text-black" : "text-gray-300"
+            }`}
+          >
+            DC차데모
+          </span>
+        </div>
+        <div className="flex flex-col w-[48px] grow justify-center items-center">
+          <DCCombo
+            fill={chgerType.includes("DC콤보") ? "black" : "gainsboro"}
+            width={32}
+            height={32}
+          />
+          <span
+            className={`text-[8px] font-bold ${
+              chgerType.includes("DC콤보") ? "text-black" : "text-gray-300"
+            }`}
+          >
+            DC콤보
+          </span>
+        </div>
       </div>
     </li>
   );
