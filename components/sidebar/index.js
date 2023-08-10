@@ -1,6 +1,4 @@
-import Sidebar from "./sidebar";
-import SearchBar from "./searchBar";
-import ChargerListItem from "./chargerListItem";
-import ChargerList from "./chargerList";
-
-export { Sidebar, SearchBar, ChargerList, ChargerListItem };
+export { default as Sidebar } from "./sidebar";
+export { default as SearchBar } from "./searchBar";
+export { default as ChargerListItem } from "./chargerListItem";
+export { default as ChargerList } from "./chargerList";
