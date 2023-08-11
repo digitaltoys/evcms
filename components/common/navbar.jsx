@@ -12,7 +12,7 @@ const Navbar = () => {
           width={48}
           height={48}
         />
-        <span className="text-2xl font-bold">EVEMS</span>
+        <span className="text-2xl font-bold">EVCMS</span>
       </div>
       <div className="px-4">
         <Link
