@@ -10,7 +10,7 @@ export default function MyApp({ Component, pageProps }) {
   return getLayout(
     <>
       <Head>
-        <title>OCUBE EVEMS</title>
+        <title>OCUBE EVCMS</title>
         <link rel="icon" href="/ocube_favicon.png" />
       </Head>
       <Component {...pageProps} />
