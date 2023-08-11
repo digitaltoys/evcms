@@ -150,7 +150,7 @@ const Filter = () => {
   return (
     <div
       className={`inline-block absolute top-4 right-4 z-10 ${
-        isFilterOpen ? "w-[32rem] h-[48rem]" : "w-10 h-10"
+        isFilterOpen ? "w-[32rem] h-[40rem]" : "w-10 h-10"
       } rounded-lg bg-white shadow-lg transition-all ease-in-out duration-300 overflow-hidden`}
     >
       {isFilterOpen ? (
@@ -215,28 +215,37 @@ const Filter = () => {
             </div>
           </div>
           <div className="flex flex-col flex-1 relative py-4 overflow-hidden">
-            <h3 className="text-xl font-bold mb-2">운영기관</h3>
-            <div className="flex justify-center items-center absolute top-4 right-0">
-              <span className="mr-2 font-bold">전체</span>
-              <label
-                className={`relative inline-block w-14 h-6 rounded-full ${
-                  isSelectAll ? "bg-green-500" : "bg-gray-200"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  className="absolute w-0 h-0 opacity-0"
-                  checked={isSelectAll}
-                  onChange={handleToggleSwitch}
-                />
-                <span
-                  className={`absolute left-1 top-1 w-4 h-4 transform transition-all duration-200 ease-in-out rounded-full ${
-                    isSelectAll
-                      ? "bg-white translate-x-[200%]"
-                      : "bg-gray-400 translate-x-0"
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-4">
+                <h3 className="text-xl font-bold">운영기관</h3>
+                {Object.values(agencyFilterOption).every((item) => !item) && (
+                  <span className="text-sm text-red-500">
+                    선택된 운영기관이 없습니다.
+                  </span>
+                )}
+              </div>
+              <div className="flex justify-center items-center">
+                <span className="mr-2 font-bold">전체</span>
+                <label
+                  className={`relative inline-block w-14 h-6 rounded-full ${
+                    isSelectAll ? "bg-green-500" : "bg-gray-200"
                   }`}
-                />
-              </label>
+                >
+                  <input
+                    type="checkbox"
+                    className="absolute w-0 h-0 opacity-0"
+                    checked={isSelectAll}
+                    onChange={handleToggleSwitch}
+                  />
+                  <span
+                    className={`absolute left-1 top-1 w-4 h-4 transform transition-all duration-200 ease-in-out rounded-full ${
+                      isSelectAll
+                        ? "bg-white translate-x-[200%]"
+                        : "bg-gray-400 translate-x-0"
+                    }`}
+                  />
+                </label>
+              </div>
             </div>
             {/* <div className="flex flex-wrap py-2 gap-2 h-96 overflow-y-scroll no-scrollbar"> */}
             <div className="flex-1 overflow-auto">

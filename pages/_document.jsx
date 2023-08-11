@@ -7,6 +7,7 @@ export default function _document() {
       <Head />
       <body>
         <Main />
+        <div id="modal-root" />
         <NextScript />
       </body>
     </Html>
