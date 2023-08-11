@@ -122,4 +122,6 @@ const Sidebar = forwardRef((props, mapRef) => {
   );
 });
 
+Sidebar.displayName = "Sidebar";
+
 export default Sidebar;
