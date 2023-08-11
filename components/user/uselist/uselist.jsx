@@ -1,14 +1,9 @@
-import {
-  ArrowDownIcon,
-  ChevronDoubleDownIcon,
-} from "@heroicons/react/24/outline";
-import React from "react";
 import UselistItem from "./uselistItem";
 
 const Uselist = () => {
   return (
     <div className="flex flex-col justify-center min-h-full">
-      <header className="w-full h-60 ">
+      <header className="w-full h-60">
         <div className="flex justify-center items-center w-[1200px] h-full m-auto">
           <h1 className="text-4xl font-extrabold">이용 내역</h1>
         </div>
