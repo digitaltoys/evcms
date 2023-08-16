@@ -1,10 +1,10 @@
 import React from "react";
 
 import { CHARGER_STAT, CHARGER_TYPE } from "../../constants";
-import AC3 from "../svg/ac3";
+import AC3 from "../svg/AC3";
 import ACStandardCharge from "../svg/ACStandardCharge";
-import DCChademo from "../svg/dcChademo";
-import DCCombo from "../svg/dcCombo";
+import DCChademo from "../svg/DCChademo";
+import DCCombo from "../svg/DCCombo";
 
 const STAT_COLOR = {
   0: "text-gray-500", // 상태미확인
