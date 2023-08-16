@@ -36,7 +36,7 @@ const Map = forwardRef((props, ref) => {
   const mapRef = useRef(null);
   const bigLogoMarkerRef = useRef(null);
 
-  const KAKAOMAP_API_KEY = "213d725ddb120155aa57f8ae612ed6d4";
+  const KAKAOMAP_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
 
   // 카카오맵 Init
   useEffect(() => {
