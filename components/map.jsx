@@ -83,9 +83,16 @@ const Map = forwardRef((props, ref) => {
         fetchStationList(mapRef.current);
 
         // 카카오지도 이벤트 등록
-        window.kakao.maps.event.addListener(newMap, "idle", function () {
+        window.kakao.maps.event.addListener(newMap, "dragend", function () {
           fetchStationList(mapRef.current);
         });
+        window.kakao.maps.event.addListener(
+          newMap,
+          "zoom_changed",
+          function () {
+            fetchStationList(mapRef.current);
+          }
+        );
 
         // OCUBE API TEST
         const ocubeFetchStationList = async (map) => {

@@ -1,6 +1,7 @@
 import React, { forwardRef, useRef } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import SimpleBar from "simplebar-react";
+import { BoltIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import {
   searchPlaceListAtom,
@@ -8,7 +9,6 @@ import {
 } from "../../atoms/atom";
 import SearchBar from "./searchBar";
 import ChargerList from "./chargerList";
-import { BoltIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const Sidebar = forwardRef((props, mapRef) => {
   const [searchPlaceList, setSearchPlaceList] = useAtom(searchPlaceListAtom);
@@ -44,6 +44,8 @@ const Sidebar = forwardRef((props, mapRef) => {
       placeMarkerOverlay.setMap(null);
       placeMarkerRef.current = null;
     });
+
+    kakao.maps.event.trigger(mapRef.current, "dragend");
   };
 
   return (

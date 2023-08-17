@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAtomValue } from "jotai";
-
+import { useDebounce } from "@uidotdev/usehooks";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+
 import {
   getSearchAutocomplete,
   getSearchResult,
 } from "../../apis/kakaoRestApi";
 import { currentGpsAtom } from "../../atoms/atom";
-import { useDebounce } from "@uidotdev/usehooks";
 
 const SearchBar = ({ handleSetPlaceList }) => {
   const currentGps = useAtomValue(currentGpsAtom);
