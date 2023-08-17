@@ -3,6 +3,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 
 import Filter from "./filter";
+import LoadingSpinner from "./common/loadingSpinner";
 import { getBoundStationList, getStationDetail } from "../apis/evApi";
 import {
   agencyFilterOptionAtom,
@@ -31,6 +32,7 @@ const Map = forwardRef((props, ref) => {
   const [filteredStationList, setFilteredStationList] = useState(null);
   const [markerList, setMarkerList] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const stationOverlayRef = useRef(null);
   const mapRef = useRef(null);
@@ -261,6 +263,7 @@ const Map = forwardRef((props, ref) => {
   // 충전소 리스트 받아오기
   const fetchStationList = async (map) => {
     try {
+      setIsLoading(true);
       const { ha: lngSW, qa: latSW, oa: lngNE, pa: latNE } = map.getBounds();
       const params = {
         s: latSW,
@@ -271,6 +274,7 @@ const Map = forwardRef((props, ref) => {
 
       const data = await getBoundStationList(params);
       setStationList(data);
+      setIsLoading(false);
     } catch (err) {
       throw err;
     }
@@ -439,7 +443,7 @@ const Map = forwardRef((props, ref) => {
     setSearchPlaceList(null);
   };
   return (
-    <section className="w-[calc(100%-390px)] h-full">
+    <section className="relative w-[calc(100%-390px)] h-full">
       <div id="map" className="w-full h-full"></div>
       {mapRef && <Filter />}
       <div className="absolute right-4 bottom-4 z-10">
@@ -453,6 +457,7 @@ const Map = forwardRef((props, ref) => {
           </span>
         </button>
       </div>
+      {isLoading && <LoadingSpinner />}
     </section>
   );
 });
