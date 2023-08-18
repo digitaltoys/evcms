@@ -291,6 +291,7 @@ const Map = forwardRef((props, ref) => {
   const fetchStationDetail = async (id) => {
     try {
       const data = await getStationDetail(id);
+      console.log(data);
       makeOverlay(data);
       setSelectedMarkerDetail(data);
     } catch (err) {
@@ -374,9 +375,9 @@ const Map = forwardRef((props, ref) => {
               </svg>
             </span>
             <span class="list-description">
-              전체 ${
+              충전가능 ${
                 Chargers.filter((item) => item.stat === "2").length
-              }대 / 충전가능 ${Chargers.length}대
+              } / ${Chargers.length}
             </span>
           </li>
         </ul>
@@ -449,6 +450,7 @@ const Map = forwardRef((props, ref) => {
     setSelectedMarker(logoMarker);
     setSearchPlaceList(null);
   };
+
   return (
     <section className="relative w-[calc(100%-390px)] h-full">
       <div id="map" className="w-full h-full"></div>
