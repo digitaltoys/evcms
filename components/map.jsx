@@ -16,6 +16,8 @@ import {
 import {
   CHARGER_LOGO_STAT_CONVERTER,
   CHARGER_TYPE,
+  CLUSTERER_CALCULATOR,
+  CLUSTERER_STYLES,
   EXIST_CHARGER_LOGO,
 } from "../constants";
 import { getOcubeBoundStationList } from "../apis/ocubeApi";
@@ -33,6 +35,7 @@ const Map = forwardRef((props, ref) => {
   const [markerList, setMarkerList] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [stationClusterer, setStationClusterer] = useState(null);
 
   const stationOverlayRef = useRef(null);
   const mapRef = useRef(null);
@@ -45,7 +48,7 @@ const Map = forwardRef((props, ref) => {
     const script = document.createElement("script");
 
     script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAOMAP_API_KEY}&autoload=false`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAOMAP_API_KEY}&autoload=false&libraries=clusterer`;
 
     document.head.appendChild(script);
 
@@ -78,6 +81,31 @@ const Map = forwardRef((props, ref) => {
           zIndex: 10,
         });
         userMarkerOverlay.setMap(newMap);
+
+        // 클러스터러 생성
+        const clusterer = new kakao.maps.MarkerClusterer({
+          map: mapRef.current,
+          averageCenter: true,
+          gridSize: 200,
+          minLevel: 6,
+          minClusterSize: 1,
+          styles: CLUSTERER_STYLES,
+          calculator: CLUSTERER_CALCULATOR,
+        });
+
+        kakao.maps.event.addListener(
+          clusterer,
+          "clustered",
+          function (clusters) {
+            clusters.forEach((cluster) => {
+              const clusterOverlay = cluster.getClusterMarker();
+
+              clusterOverlay.setZIndex(20);
+            });
+          }
+        );
+
+        setStationClusterer(clusterer);
 
         // 충전소 data fetching
         fetchStationList(mapRef.current);
@@ -193,7 +221,7 @@ const Map = forwardRef((props, ref) => {
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
         const logoMarker = new window.kakao.maps.Marker({
           position: markerPosition,
-          map: mapRef.current,
+          // map: mapRef.current,
           title: statNm,
           image: markerImage,
         });
@@ -209,6 +237,10 @@ const Map = forwardRef((props, ref) => {
 
         inBoundsMarker.push(logoMarker);
       }
+
+      // 클러스터러 clear 후 marker 추가
+      stationClusterer.clear();
+      stationClusterer.addMarkers(inBoundsMarker);
 
       setMarkerList(inBoundsMarker);
     }

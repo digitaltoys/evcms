@@ -162,6 +162,71 @@ export const STATION_KIND = {
   J0: "교육문화시설",
 };
 
+export const CLUSTERER_STYLES = [
+  {
+    width: "50px",
+    height: "50px",
+    lineHeight: "50px",
+    fontSize: "25px",
+    fontWeight: "700",
+    background: "#00b894",
+    color: "white",
+    textAlign: "center",
+    borderRadius: "50%",
+    opacity: "0.9",
+  },
+  {
+    width: "75px",
+    height: "75px",
+    lineHeight: "75px",
+    fontSize: "25px",
+    fontWeight: "700",
+    background: "#f9ca24",
+    color: "white",
+    textAlign: "center",
+    borderRadius: "50%",
+    opacity: "0.9",
+  },
+  {
+    width: "100px",
+    height: "100px",
+    lineHeight: "100px",
+    fontSize: "25px",
+    fontWeight: "700",
+    background: "#f39c12",
+    color: "white",
+    textAlign: "center",
+    borderRadius: "50%",
+    opacity: "0.9",
+  },
+  {
+    width: "125px",
+    height: "125px",
+    lineHeight: "125px",
+    fontSize: "25px",
+    fontWeight: "700",
+    background: "#e74c3c",
+    color: "white",
+    textAlign: "center",
+    borderRadius: "50%",
+    opacity: "0.9",
+  },
+  {
+    width: "150px",
+    height: "150px",
+    lineHeight: "150px",
+    fontSize: "25px",
+    fontWeight: "700",
+    background: "#9b59b6",
+    color: "white",
+    textAlign: "center",
+    borderRadius: "50%",
+    opacity: "0.9",
+  },
+];
+
+export const CLUSTERER_CALCULATOR = [50, 100, 500, 1000, 2000];
+
 // filter
 export const CHARGING_SPEED = ["완속", "급속", "초급속"];
 export const CHARGING_TYPE = ["AC완속", "AC3상", "DC차데모", "DC콤보"];
