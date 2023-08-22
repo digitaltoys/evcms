@@ -475,6 +475,7 @@ const Map = forwardRef((props, ref) => {
   const handleClickMyLocation = () => {
     const { lat, lng } = currentGps;
     const moveLatLng = new window.kakao.maps.LatLng(lat, lng);
+    mapRef.current.setLevel(2);
     mapRef.current.panTo(moveLatLng);
   };
 
