@@ -22,13 +22,15 @@ const Navbar = () => {
 
   return (
     <nav className="flex justify-between items-center  w-full h-16 bg-white shadow-md">
-      <div className="flex items-center gap-4 p-4">
-        <Image
-          src="/ocube_logo_vertical.png"
-          alt="company_logo"
-          width={48}
-          height={48}
-        />
+      <div className="flex items-center gap-4 px-4">
+        <span className="w-12 h-12">
+          <Image
+            src="/ocube_logo_vertical.png"
+            alt="company_logo"
+            width={48}
+            height={48}
+          />
+        </span>
         <span className="text-2xl font-bold">EVCMS</span>
       </div>
       <div className="flex items-center gap-4 px-4">

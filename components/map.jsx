@@ -485,7 +485,7 @@ const Map = forwardRef((props, ref) => {
   };
 
   return (
-    <section className="relative w-[calc(100%-390px)] h-full">
+    <section className="relative w-full h-full">
       <div id="map" className="w-full h-full"></div>
       {mapRef && <Filter />}
       <div className="absolute right-4 bottom-4 z-10">
