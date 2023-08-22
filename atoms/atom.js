@@ -9,7 +9,7 @@ const commonCodeAtom = atom(null);
 
 // login
 const isLoginAtom = atom(false);
-const loginUserDataAtom = atom(null);
+const loginUserDataAtom = atom({ nick_name: "오큐브(주)" });
 
 // map component
 const currentGpsAtom = atom({ lat: null, lng: null });

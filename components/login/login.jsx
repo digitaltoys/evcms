@@ -35,7 +35,7 @@ const Login = () => {
     router.push("/");
   };
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+    <div className="h-full flex justify-center items-center bg-gray-100">
       <div className="w-96 h-[36rem] bg-white border-gray-200 border-[1px] border-solid rounded-lg">
         <div className="flex justify-center items-center my-12 w-40 h-40 m-auto">
           <Image

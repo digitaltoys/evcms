@@ -1,17 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 
-import { isLoginAtom } from "../../atoms/atom";
+import { isLoginAtom, loginUserDataAtom } from "../../atoms/atom";
 
 const Navbar = () => {
   const [isLogin, setIsLogin] = useAtom(isLoginAtom);
+  const loginUserData = useAtomValue(loginUserDataAtom);
 
   const router = useRouter();
 
   function isActive(path) {
     return router.pathname === path ? true : false;
+  }
+
+  function handleClickLogout() {
+    setIsLogin(false);
+    router.push("/login");
   }
 
   return (
@@ -25,7 +31,7 @@ const Navbar = () => {
         />
         <span className="text-2xl font-bold">EVCMS</span>
       </div>
-      <div className="px-4">
+      <div className="flex items-center gap-4 px-4">
         {/* <Link className={`px-4`} href="/">
           <span className={`${isActive("/") && "text-green-500"}`}>
             충전소 조회
@@ -38,12 +44,19 @@ const Navbar = () => {
         </Link> */}
 
         {isLogin ? (
-          <Link
-            href="/login"
-            className="py-2 px-4 text-sm font-bold border-[1px]"
-          >
-            <span>로그아웃</span>
-          </Link>
+          <>
+            <div>
+              <span className="text-sm font-bold">
+                {loginUserData.nick_name}
+              </span>
+            </div>
+            <button
+              className="py-2 px-4 text-sm font-bold border-[1px]"
+              onClick={handleClickLogout}
+            >
+              <span>로그아웃</span>
+            </button>
+          </>
         ) : (
           <Link
             href="/login"
