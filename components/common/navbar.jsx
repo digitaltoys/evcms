@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import { useAtom } from "jotai";
+
+import { isLoginAtom } from "../../atoms/atom";
 
 const Navbar = () => {
+  const [isLogin, setIsLogin] = useAtom(isLoginAtom);
+
   const router = useRouter();
 
   function isActive(path) {
@@ -22,7 +26,7 @@ const Navbar = () => {
         <span className="text-2xl font-bold">EVCMS</span>
       </div>
       <div className="px-4">
-        <Link className={`px-4`} href="/">
+        {/* <Link className={`px-4`} href="/">
           <span className={`${isActive("/") && "text-green-500"}`}>
             충전소 조회
           </span>
@@ -31,13 +35,23 @@ const Navbar = () => {
           <span className={`${isActive("/user/uselist") && "text-green-500"}`}>
             이용내역
           </span>
-        </Link>
-        <Link
-          href="/login"
-          className="py-2 px-4 text-sm font-bold border-[1px]"
-        >
-          <span>로그인</span>
-        </Link>
+        </Link> */}
+
+        {isLogin ? (
+          <Link
+            href="/login"
+            className="py-2 px-4 text-sm font-bold border-[1px]"
+          >
+            <span>로그아웃</span>
+          </Link>
+        ) : (
+          <Link
+            href="/login"
+            className="py-2 px-4 text-sm font-bold border-[1px]"
+          >
+            <span>로그인</span>
+          </Link>
+        )}
       </div>
     </nav>
   );

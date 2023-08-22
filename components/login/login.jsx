@@ -1,12 +1,21 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { useAtom } from "jotai";
+
+import { isLoginAtom, loginUserDataAtom } from "../../atoms/atom";
 
 const Login = () => {
+  const [isLogin, setIsLogin] = useAtom(isLoginAtom);
+  const [loginUserData, setLoginUserData] = useAtom(loginUserDataAtom);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const router = useRouter();
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -22,6 +31,8 @@ const Login = () => {
   const handleSubmitForm = () => {
     console.log("email", email);
     console.log("password", password);
+    setIsLogin(true);
+    router.push("/");
   };
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">

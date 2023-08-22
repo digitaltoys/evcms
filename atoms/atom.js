@@ -7,6 +7,10 @@ import {
 
 const commonCodeAtom = atom(null);
 
+// login
+const isLoginAtom = atom(false);
+const loginUserDataAtom = atom(null);
+
 // map component
 const currentGpsAtom = atom({ lat: null, lng: null });
 const selectedMarkerDetailAtom = atom(null);
@@ -20,6 +24,8 @@ const typeFilterOptionAtom = atom(TYPE_FILTER_DEFAULT);
 const agencyFilterOptionAtom = atom(AGENCY_FILTER_DEFAULT);
 
 export {
+  isLoginAtom,
+  loginUserDataAtom,
   commonCodeAtom,
   currentGpsAtom,
   selectedMarkerDetailAtom,
